@@ -1,6 +1,8 @@
 from django.core.validators import MinLengthValidator
 from django.db import models
 
+from cloudinary import models as cloudinary_models
+
 
 class Company(models.Model):
     NAME_MAX_LEN = 30
@@ -26,7 +28,12 @@ class Company(models.Model):
         blank=False,
 
     )
-    #
-    # logo = models.ImageField(
-    #
-    # )
+
+    logo = cloudinary_models.CloudinaryField(
+        'image',
+        null=False,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f'{self.name}'

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import environ
+import cloudinary
 
 import os
 
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
     # Third party apps:
     # DJANGO REST APP
     'rest_framework',
+    # Cloudinary
+    'cloudinary',
 
     # Application apps:
     'crm_for_companies.api_companies',
@@ -126,6 +129,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+cloudinary.config(
+    cloud_name=env('CLOUDINARY_CLOUD_NAME'),
+    api_key=env('CLOUDINARY_API_KEY'),
+    api_secret=env('CLOUDINARY_API_SECRET'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
