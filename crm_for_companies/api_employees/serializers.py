@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from crm_for_companies.api_companies.models import Company
+from crm_for_companies.api_employees.models import Employee
 
 
-class CompanySerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Company
+        model = Employee
         fields = '__all__'
 
     def to_representation(self, instance):
-        instance.logo = instance.logo.url
+        instance.photo = instance.photo.url
         new_representation = super().to_representation(instance)
 
         return new_representation

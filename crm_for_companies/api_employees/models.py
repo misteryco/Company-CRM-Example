@@ -34,20 +34,24 @@ class Employee(models.Model):
 
     last_name = models.CharField(
         max_length=NAME_MAX_LEN,
-        validators=(MinLengthValidator(NAME_MIN_LEN),
-                    ),
+        validators=(
+            MinLengthValidator(NAME_MIN_LEN),
+        ),
         null=False,
         blank=False,
     )
 
     date_of_birth = models.DateField(
-        validate_age,
+        validators=(
+            validate_age,
+        ),
     )
 
     photo = cloudinary_models.CloudinaryField(
         'image',
         null=False,
         blank=True,
+
     )
 
     position = models.CharField(
@@ -68,3 +72,6 @@ class Employee(models.Model):
         Company,
         on_delete=models.RESTRICT,
     )
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}, works at: {self.company}.'
