@@ -41,6 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third party apps:
+    # DJANGO REST APP
+    'rest_framework',
+
+    # Application apps:
+    'crm_for_companies.api_companies',
+    'crm_for_companies.api_employees',
+
 ]
 
 MIDDLEWARE = [
