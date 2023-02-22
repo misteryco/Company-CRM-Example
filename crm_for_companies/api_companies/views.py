@@ -46,7 +46,18 @@ class CustomCreateCompanyApiView(rest_basic_views.APIView):
 
 
 class CustomDeleteCompanyApiView(rest_basic_views.APIView):
-    pass
+    http_method_names = ['get', 'delete']
+    queryset = Company.objects.all()
+
+    def get(self, request, pk):
+        instance = CompanySerializer(self.queryset.filter(pk=pk).get())
+        # print(instance)
+        return Response(instance.data)
+
+    def delete(self, request, pk):
+        instance = self.queryset.filter(pk=pk).get()
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CompanyListApiView(rest_views.ListCreateAPIView):
