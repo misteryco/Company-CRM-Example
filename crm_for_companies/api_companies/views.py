@@ -45,14 +45,22 @@ class CustomCreateCompanyApiView(rest_basic_views.APIView):
             return {}
 
 
-class CustomDeleteCompanyApiView(rest_basic_views.APIView):
-    http_method_names = ['get', 'delete']
+class DetailsCompanyApiView(rest_basic_views.APIView):
+    http_method_names = ['get', 'delete', 'put']
     queryset = Company.objects.all()
 
     def get(self, request, pk):
         instance = CompanySerializer(self.queryset.filter(pk=pk).get())
         # print(instance)
         return Response(instance.data)
+
+    def put(self, request, pk):
+        instance = self.queryset.filter(pk=pk).get()
+        serializer = CompanySerializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         instance = self.queryset.filter(pk=pk).get()
