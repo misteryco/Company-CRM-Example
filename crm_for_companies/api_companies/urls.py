@@ -1,7 +1,10 @@
 from django.urls import path
 
-from crm_for_companies.api_companies.views import CompanyListApiView
+from crm_for_companies.api_companies.views import CompanyListApiView, CustomCompanyListApiView, \
+    CustomCreateCompanyApiView
 
 urlpatterns = (
     path('', CompanyListApiView.as_view(), name='api list company'),
+    path('custom/', CustomCompanyListApiView.as_view(), name='api custom list company'),
+    path('custom/create/', CustomCreateCompanyApiView.as_view(), name='api custom create company'),
 )
