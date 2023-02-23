@@ -11,8 +11,10 @@ from crm_for_companies.api_companies.models import Company
 
 def validate_age(value):
     min_age_employee = 16
-    if date.today() < (value - timedelta(days=min_age_employee * 365)):
-        raise ValidationError(f'Employee myst be at least 16 years old. Check the date.')
+    delta_age = date.today().year - value.year
+    # print(f"delta_age={delta_age}")
+    if delta_age <= min_age_employee:
+        raise ValidationError(f'Employee should be at least {min_age_employee} years old')
 
 
 class Employee(models.Model):
@@ -55,8 +57,8 @@ class Employee(models.Model):
     )
 
     position = models.CharField(
-        max_length=NAME_MAX_LEN,
-        validators=(MinLengthValidator(NAME_MIN_LEN),
+        max_length=POSITION_MAX_LEN,
+        validators=(MinLengthValidator(POSITION_MIN_LEN),
                     ),
         null=False,
         blank=False,

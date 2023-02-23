@@ -1,0 +1,16 @@
+{
+    "first_name": "aaa",
+    "last_name": "aaa",
+    "date_of_birth": "2006-07-04",
+    "photo": "D:/03.jpg",
+    "position": "aaa",
+    "salary": 100,
+    "company": 42
+}
+
+
+{
+    "name": "aaaa",
+    "description": "1234567890",
+    "logo": "D:/03.jpg"
+}

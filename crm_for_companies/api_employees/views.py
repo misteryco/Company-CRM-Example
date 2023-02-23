@@ -25,7 +25,6 @@ class EmployeeCreateApiView(rest_views.CreateAPIView):
     serializer_class = CreateEmployeeSerializer
 
     def post(self, request, *args, **kwargs):
-        # serializer_class = self.get_serializer_class()
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
@@ -35,12 +34,6 @@ class EmployeeCreateApiView(rest_views.CreateAPIView):
         serializer.save()
 
         return Response(serializer.data)
-
-        # return Response({
-        #     'name': serializer.validated_data['name'],
-        #     'description': serializer.validated_data['description'],
-        #     'logo': serializer.validated_data['logo'],
-        # })
 
 
 class EmployeeUpdateApiView(rest_views.RetrieveUpdateAPIView):
