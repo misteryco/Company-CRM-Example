@@ -52,16 +52,19 @@ python manage.py startserver
 Company JSON Format
 
 {
+
     "name": String,
     
     "description": String,
     
     "logo": "logo_filelocation from PC for eaxample : D:/03.jpg"
+    
 }
 
 Employee JSON Format:
 
 {
+
     "first_name": String,
     
     "last_name": String,
@@ -75,6 +78,7 @@ Employee JSON Format:
     "salary": Integer,
     
     "company": Integer
+    
 }
 
 
