@@ -43,7 +43,7 @@ HOW TO USE:
 
 - In "crm_for_companies" folder run:
 
-python manage.py startserver
+python manage.py runserver
 
 python manage.py makemigrations
 
