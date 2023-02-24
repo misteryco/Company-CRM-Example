@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import generics as generic_rest_views, views as rest_basic_views, status
+from rest_framework import generics as generic_rest_views, views as rest_basic_views, status, permissions
 import cloudinary.uploader
 from rest_framework.response import Response
 
