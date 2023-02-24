@@ -16,6 +16,8 @@ The project app uses SQLITE3 as a DBMS.
 
 The app need a working CLOUDINARY account for photo and logo upload and serve.
 
+The project app uses environment variables to hide sensitive information.
+
 HOW TO BUILD:
 
 - In a new vnv:
@@ -23,18 +25,47 @@ HOW TO BUILD:
 - pip install requirements.txt
 
 - setup your .env file:
+
 DEBUG=on
+
 SECRET_KEY='YOUR_SECRET'
+
 CLOUDINARY_CLOUD_NAME='YOUR_CLOUDINARY_CLOUD_NAME'
+
 CLOUDINARY_API_KEY='YOUR_CLOUDINARY_API_KEY'
+
 CLOUDINARY_API_SECRET='YOUR_CLOUDINARY_API_SECRET'
+
 
 HOW TO USE:
 
-In "mango_product_data" folder run:
+- In "crm_for_companies" folder run:
 
-scrapy crawl single_site_product_scraper_loc -o mango_data_loc.json
+python manage.py makemigrations
 
-The project app uses environment variables to hide sensitive information.
+python manage.py migrate 
+
+python manage.py startserver
+
+- JSON format data for input:
+Company JSON Format
+{
+    "name": String,
+    "description": String,
+    "logo": "logo_filelocation from PC for eaxample : D:/03.jpg"
+}
+
+Employee JSON Format:
+
+{
+    "first_name": String,
+    "last_name": String,
+    "date_of_birth": Data, for example: "2006-07-04",
+    "photo": "lphoto_filelocation from PC for eaxample : D:/03.jpg",
+    "position": String,
+    "salary": Integer,
+    "company": Integer
+}
+
 
 DISCLAIMER: This app is not a fully operational product, it's not intended for commercial use and has many features that haven't been properly tested or developed.
