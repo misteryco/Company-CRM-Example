@@ -49,6 +49,21 @@ python manage.py migrate
 
 python manage.py runserver
 
+
+URLs:
+
+· GET 'localhost:8000/api_companies/' – lists all companies with employees
+
+· GET 'localhost:8000/api_companies/?company_id={CATEGORY_NAME}' – lists all companies with employees
+
+· GET 'localhost:8000/api_companies/details/{COMPANY_ID}' –  lists one company
+
+· PUT 'localhost:8000/api_companies/details/{COMPANY_ID}' –  update one company
+
+· DELETE 'localhost:8000/api_companies/details/{COMPANY_ID}' –  delete one company
+
+
+
 - JSON format data for input:
 
 Company JSON Format
