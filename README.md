@@ -48,6 +48,7 @@ python manage.py migrate
 python manage.py startserver
 
 - JSON format data for input:
+
 Company JSON Format
 {
     "name": String,
