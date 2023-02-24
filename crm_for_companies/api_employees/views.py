@@ -28,20 +28,6 @@ class EmployeeListApiView(rest_basic_views.APIView):
         return queryset.all()
 
 
-# class GenericEmployeeListApiView(rest_views.ListAPIView):
-#     queryset = Employee.objects.all()
-#     serializer_class = EmployeeSerializerWithCompany
-#
-#     def get_queryset(self):
-#         company_id = self.request.query_params.get('company_id')
-#         queryset = self.queryset
-#
-#         if company_id:
-#             queryset = queryset.filter(company_id=company_id)
-#
-#         return queryset.all()
-
-
 class EmployeeCreateApiView(rest_basic_views.APIView):
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
