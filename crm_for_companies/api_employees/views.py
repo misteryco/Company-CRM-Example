@@ -3,6 +3,7 @@ from rest_framework import generics as generic_rest_views, views as rest_basic_v
 import cloudinary.uploader
 from rest_framework.response import Response
 
+from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
 from crm_for_companies.api_employees.serializers import EmployeeSerializerWithCompany, CreateEmployeeSerializer
 
@@ -45,10 +46,18 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
 
-    # TODO: Wrong company pk raise validation error
     def post(self, request, *args, **kwargs):
+
+        try:
+            Company.objects.get(pk=request.data['company'])
+        except Company.DoesNotExist:
+            return Response({'errors': f"Company with id:{request.data['company']} does not exist.",
+                             'status': status.HTTP_400_BAD_REQUEST},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
+        # print(serializer)
         if serializer.is_valid(raise_exception=True):
             file = request.data.get('photo')
             photo = cloudinary.uploader.upload(file)
@@ -57,17 +66,25 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
             return Response({'data': serializer.data, 'errors': serializer.errors, 'status': status.HTTP_201_CREATED},
                             status=status.HTTP_201_CREATED, )
 
-        return Response({'errors': serializer.errors, 'status': status.HTTP_400_BAD_REQUEST})
+        return Response({'errors': serializer.errors, 'status': status.HTTP_400_BAD_REQUEST},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class EmployeeUpdateApiView(generic_rest_views.RetrieveUpdateAPIView):
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
 
-    # TODO: Use same serializer as create
     def put(self, request, *args, **kwargs):
+        try:
+            Company.objects.get(pk=request.data['company'])
+        except Company.DoesNotExist:
+            return Response({'errors': f"Company with id:{request.data['company']} does not exist.",
+                             'status': status.HTTP_400_BAD_REQUEST},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         instance = get_object_or_404(Employee, pk=kwargs['pk'])
         serializer = self.serializer_class(instance, data=request.data)
+
         if serializer.is_valid():
             print(f"valid check{serializer.is_valid()}")
             serializer.save()

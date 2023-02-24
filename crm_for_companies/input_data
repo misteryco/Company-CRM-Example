@@ -8,6 +8,8 @@
     "company": 42
 }
 
+company = PrimaryKeyRelatedField(queryset=Company.objects.all())
+
 
 {
     "name": "aaaa",

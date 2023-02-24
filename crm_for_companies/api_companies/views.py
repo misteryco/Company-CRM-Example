@@ -31,14 +31,6 @@ class CompanyListApiView(rest_basic_views.APIView):
 class CreateCompanyApiView(rest_basic_views.APIView):
     queryset = Company.objects.all()
 
-    # TODO: Is it necessary get queryset?
-    def get_queryset(self):
-        company_id = self.request.query_params.get('company_id')
-        queryset = self.queryset.all()
-        if company_id:
-            queryset = queryset.filter(id=company_id)
-        return queryset
-
     def post(self, request, *args, **kwargs):
         serializer = CompanyCreateSerializer(data=request.data,
                                              context={'request': request})
@@ -51,13 +43,6 @@ class CreateCompanyApiView(rest_basic_views.APIView):
                             status=status.HTTP_201_CREATED, )
 
         return Response({'errors': serializer.errors, 'status': status.HTTP_400_BAD_REQUEST})
-
-    # TODO: Is it necessary get success headers?
-    def get_success_headers(self, data):
-        try:
-            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
-        except (TypeError, KeyError):
-            return {}
 
 
 class DetailsCompanyApiView(rest_basic_views.APIView):
