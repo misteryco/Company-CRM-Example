@@ -1,7 +1,6 @@
 import cloudinary.uploader
-from django.http import Http404
 from django.shortcuts import get_object_or_404
-from rest_framework import generics as rest_views, views as rest_basic_views, status
+from rest_framework import views as rest_basic_views, status
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
@@ -18,7 +17,8 @@ class CompanyListApiView(rest_basic_views.APIView):
     def get(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
 
-        return Response(serializer.data)
+        return Response({'data': serializer.data, 'status': status.HTTP_200_OK},
+                        status=status.HTTP_200_OK, )
 
     def get_queryset(self):
         company_id = self.request.query_params.get('company_id')
@@ -31,6 +31,7 @@ class CompanyListApiView(rest_basic_views.APIView):
 class CreateCompanyApiView(rest_basic_views.APIView):
     queryset = Company.objects.all()
 
+    # TODO: Is it necessary get queryset?
     def get_queryset(self):
         company_id = self.request.query_params.get('company_id')
         queryset = self.queryset.all()
@@ -41,18 +42,17 @@ class CreateCompanyApiView(rest_basic_views.APIView):
     def post(self, request, *args, **kwargs):
         serializer = CompanyCreateSerializer(data=request.data,
                                              context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        file = request.data.get('logo')
-        logo = cloudinary.uploader.upload(file)
-        serializer.validated_data['logo'] = logo['url']
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
+            file = request.data.get('logo')
+            logo = cloudinary.uploader.upload(file)
+            serializer.validated_data['logo'] = logo['url']
             serializer.save()
             return Response({'data': serializer.data, 'errors': serializer.errors, 'status': status.HTTP_201_CREATED},
                             status=status.HTTP_201_CREATED, )
 
         return Response({'errors': serializer.errors, 'status': status.HTTP_400_BAD_REQUEST})
 
-    # TODO: Is it necessary ?
+    # TODO: Is it necessary get success headers?
     def get_success_headers(self, data):
         try:
             return {'Location': str(data[api_settings.URL_FIELD_NAME])}
@@ -63,10 +63,10 @@ class CreateCompanyApiView(rest_basic_views.APIView):
 class DetailsCompanyApiView(rest_basic_views.APIView):
     http_method_names = ['get', 'delete', 'put']
     queryset = Company.objects.all()
-    serializer = CompanySerializer
+    serializer_class = CompanySerializer
 
     def get(self, request, pk):
-        instance = self.serializer(get_object_or_404(Company, pk=pk))
+        instance = self.serializer_class(get_object_or_404(Company, pk=pk))
         # print(f"get obj {instance}")
         # instance1 = self.serializer(self.queryset.filter(pk=pk).get())
         # print(f"int1{instance1}")
@@ -75,7 +75,7 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
     def put(self, request, pk):
         instance = get_object_or_404(Company, pk=pk)
         # instance = get_object_or_404(Company, pk=1)
-        serializer = self.serializer(instance, data=request.data)
+        serializer = self.serializer_class(instance, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'data': serializer.data, 'errors': serializer.errors, 'status': status.HTTP_200_OK},
@@ -85,7 +85,6 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
                         status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        # instance = get_object_or_404(Company, pk=pk)
         try:
             instance = Company.objects.get(pk=pk)
         except Company.DoesNotExist:

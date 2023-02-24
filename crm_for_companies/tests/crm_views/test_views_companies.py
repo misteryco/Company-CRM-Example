@@ -2,7 +2,6 @@ import json
 from rest_framework import status
 from django.test import TestCase, Client
 from django.urls import reverse
-from rest_framework.decorators import api_view
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_companies.serializers import CompanySerializerWithEmployees, CompanySerializer
@@ -48,12 +47,10 @@ class TestCompanyListView(TestCase):
                                                 )
 
     def test_get_all_companies_with_employees(self):
-        # get API response
         response = client.get(reverse('api list company'))
-        # get data from db
         companies = Company.objects.all()
         serializer = CompanySerializerWithEmployees(companies, many=True)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data['data'], serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
@@ -105,9 +102,6 @@ class TestCompanySingleView(TestCase):
 
 
 class TestCreateCompany(TestCase):
-    client = Client()
-
-    # initialize the APIClient app
     def setUp(self):
         self.valid_payload = {'name': 'Company 1',
                               'description': 'A new company 1 description',
