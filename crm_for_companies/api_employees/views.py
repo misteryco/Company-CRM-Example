@@ -43,7 +43,7 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
 
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
-        # print(serializer)
+
         if serializer.is_valid(raise_exception=True):
             file = request.data.get('photo')
             photo = cloudinary.uploader.upload(file)

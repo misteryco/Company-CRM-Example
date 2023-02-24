@@ -20,19 +20,11 @@ def validate_age(value):
 
 
 class EmployeeSerializerWithCompany(serializers.ModelSerializer):
-    # Give more than ID for company
     company = ShortCompanySerializer()
 
     class Meta:
         model = Employee
         fields = '__all__'
-
-    # def to_representation(self, instance):
-    #     print(instance.company)
-    #     instance.photo = instance.photo.url
-    #     new_representation = super().to_representation(instance)
-    #
-    #     return new_representation
 
 
 class CreateEmployeeSerializer(serializers.ModelSerializer):
