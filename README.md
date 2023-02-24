@@ -41,11 +41,13 @@ HOW TO USE:
 
 - In "crm_for_companies" folder run:
 
+python manage.py startserver
+
 python manage.py makemigrations
 
 python manage.py migrate 
 
-python manage.py startserver
+python manage.py runserver
 
 - JSON format data for input:
 
