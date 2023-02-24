@@ -1,4 +1,6 @@
 import json
+
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -13,6 +15,13 @@ client = Client()
 class TestCompanyListView(TestCase):
 
     def setUp(self):
+        username = 'dan'
+        user_password = 'KsijdyY^sd768A'
+        User = get_user_model()
+
+        self.user = User.objects.create_user(username=username, )
+        self.user.set_password(user_password)
+        self.user.save()
         company_one = Company.objects.create(name='Company 1',
                                              description='A new company 1 description',
                                              logo='D:/03.jpg',
@@ -47,6 +56,7 @@ class TestCompanyListView(TestCase):
                                                 )
 
     def test_get_all_companies_with_employees(self):
+        client.force_login(self.user)
         response = client.get(reverse('api list company'))
         companies = Company.objects.all()
         serializer = CompanySerializerWithEmployees(companies, many=True)
@@ -59,6 +69,13 @@ class TestCompanySingleView(TestCase):
 
     # initialize the APIClient app
     def setUp(self):
+        username = 'dan'
+        user_password = 'KsijdyY^sd768A'
+        User = get_user_model()
+
+        self.user = User.objects.create_user(username=username, )
+        self.user.set_password(user_password)
+        self.user.save()
         self.company_one = Company.objects.create(name='Company 1',
                                                   description='A new company 1 description',
                                                   logo='D:/03.jpg',
@@ -93,6 +110,7 @@ class TestCompanySingleView(TestCase):
                                                      )
 
     def test_get_details_company(self):
+        client.force_login(self.user)
         response = client.get(
             reverse('api details company', kwargs={'pk': self.company_one.pk}))
         company = Company.objects.get(pk=self.company_one.pk)
@@ -103,6 +121,13 @@ class TestCompanySingleView(TestCase):
 
 class TestCreateCompany(TestCase):
     def setUp(self):
+        username = 'dan'
+        user_password = 'KsijdyY^sd768A'
+        User = get_user_model()
+
+        self.user = User.objects.create_user(username=username, )
+        self.user.set_password(user_password)
+        self.user.save()
         self.valid_payload = {'name': 'Company 1',
                               'description': 'A new company 1 description',
                               'logo': 'D:/03.jpg'
@@ -114,6 +139,7 @@ class TestCreateCompany(TestCase):
                                 }
 
     def test_create_valid_company(self):
+        client.force_login(self.user)
         response = client.post(
             reverse('api create company'),
             data=json.dumps(self.valid_payload),
@@ -122,6 +148,7 @@ class TestCreateCompany(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_company(self):
+        client.force_login(self.user)
         response = client.post(
             reverse('api create company'),
             data=json.dumps(self.invalid_payload),
@@ -133,6 +160,14 @@ class TestCreateCompany(TestCase):
 class UpdateSingleCompanyTest(TestCase):
 
     def setUp(self):
+        username = 'dan'
+        user_password = 'KsijdyY^sd768A'
+        User = get_user_model()
+
+        self.user = User.objects.create_user(username=username, )
+        self.user.set_password(user_password)
+        self.user.save()
+
         self.company_one = Company.objects.create(name='Company 1',
                                                   description='A new company 1 description',
                                                   logo='D:/03.jpg',
@@ -152,6 +187,7 @@ class UpdateSingleCompanyTest(TestCase):
                                 }
 
     def test_valid_update_company(self):
+        client.force_login(self.user)
         response = client.put(
             reverse('api details company', kwargs={'pk': self.company_one.pk}),
             data=json.dumps(self.valid_payload),
@@ -160,6 +196,7 @@ class UpdateSingleCompanyTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_update_company(self):
+        client.force_login(self.user)
         response = client.put(
             reverse('api details company', kwargs={'pk': self.company_one.pk}),
             data=json.dumps(self.invalid_payload),
@@ -170,6 +207,13 @@ class UpdateSingleCompanyTest(TestCase):
 class DeleteCompanyTest(TestCase):
 
     def setUp(self):
+        username = 'dan'
+        user_password = 'KsijdyY^sd768A'
+        User = get_user_model()
+
+        self.user = User.objects.create_user(username=username, )
+        self.user.set_password(user_password)
+        self.user.save()
         self.company_one = Company.objects.create(name='Company 1',
                                                   description='A new company 1 description',
                                                   logo='D:/03.jpg',
@@ -180,11 +224,13 @@ class DeleteCompanyTest(TestCase):
                                                   )
 
     def test_valid_delete_company(self):
+        client.force_login(self.user)
         response = client.delete(
             reverse('api details company', kwargs={'pk': self.company_two.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_invalid_delete_company(self):
+        client.force_login(self.user)
         response = client.delete(
             reverse('api details company', kwargs={'pk': 100}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
