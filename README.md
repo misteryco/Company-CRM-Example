@@ -16,7 +16,9 @@ The project app uses SQLITE3 as a DBMS.
 
 The app need a working CLOUDINARY account for photo and logo upload and serve.
 
-The project app uses environment variables to hide sensitive information.
+The app uses environment variables to hide sensitive information.
+
+The app have browsable API.
 
 HOW TO BUILD:
 
@@ -48,6 +50,7 @@ python manage.py makemigrations
 python manage.py migrate 
 
 python manage.py runserver
+
 
 
 URLs:
