@@ -65,7 +65,7 @@ Companies:
 
 · GET 'localhost:8000/api_companies/' – lists all companies with employees data.
 
-· GET 'localhost:8000/api_companies/?company_id={COMPANY_ID}' – specific  companie by company ID with employees.
+· GET 'localhost:8000/api_companies/?company_id={COMPANY_ID}' – specific  company by company ID with employees.
 
 · GET 'localhost:8000/api_companies/details/{COMPANY_ID}' –  lists one company.
 
