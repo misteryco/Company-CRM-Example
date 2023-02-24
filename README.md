@@ -52,15 +52,22 @@ python manage.py runserver
 
 URLs:
 
-· GET 'localhost:8000/api_companies/' – lists all companies with employees
+Companies:
 
-· GET 'localhost:8000/api_companies/?company_id={CATEGORY_NAME}' – lists all companies with employees
-
+· GET 'localhost:8000/api_companies/' – lists all companies with employees data.
+· GET 'localhost:8000/api_companies/?company_id={COMPANY_ID}' – specific  companie by company ID with employees.
 · GET 'localhost:8000/api_companies/details/{COMPANY_ID}' –  lists one company
-
 · PUT 'localhost:8000/api_companies/details/{COMPANY_ID}' –  update one company
-
 · DELETE 'localhost:8000/api_companies/details/{COMPANY_ID}' –  delete one company
+
+Employess:
+
+· GET 'localhost:8000/api_employees/' – lists all employees with companies data.
+· GET 'localhost:8000/api_ employees/?company_id={COMPANY_ID}' – lists all employees within specific company.
+· GET 'localhost:8000/api_ employees/details/{EMPLOYEE_ID}' – lists one employee.
+· PUT 'localhost:8000/api_ employees/update/{EMPLOYEE_ID}' – update one employee.
+· DELETE 'localhost:8000/api_ employees/delete/{EMPLOYEE_ID}' – delete one employee.
+
 
 
 
