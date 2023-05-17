@@ -49,7 +49,8 @@ class CompanySerializer(serializers.ModelSerializer):
                                         validators=[MinLengthValidator(Company.DESCRIPTION_MIN_LENGTH), ])
 
     def to_representation(self, instance):
-        instance.logo = instance.logo.url
+        instance.logo = instance.logo
+        # instance.logo = instance.logo.url
         new_representation = super().to_representation(instance)
 
         return new_representation

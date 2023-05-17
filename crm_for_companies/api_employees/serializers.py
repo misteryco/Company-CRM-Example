@@ -42,3 +42,10 @@ class CreateEmployeeSerializer(serializers.ModelSerializer):
 
     position = serializers.CharField(max_length=Employee.POSITION_MAX_LEN,
                                      validators=[MinLengthValidator(Employee.POSITION_MIN_LEN), ])
+
+    def to_representation(self, instance):
+        instance.photo = instance.photo
+        # instance.logo = instance.logo.url
+        new_representation = super().to_representation(instance)
+
+        return new_representation

@@ -1,7 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics as generic_rest_views, views as rest_basic_views, status, permissions
 import cloudinary.uploader
+# from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
@@ -104,3 +107,16 @@ class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
         return Response({'data': serializer.data,
                          'status': status.HTTP_200_OK},
                         status=status.HTTP_200_OK, )
+
+
+class ExampleView(APIView):
+    # when we have not configured settings file with : DEFAULT_AUTHENTICATION_CLASSES
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {
+            'user': str(request.user),  # `django.contrib.auth.User` instance.
+            'auth': str(request.auth),  # None
+        }
+        return Response(content)

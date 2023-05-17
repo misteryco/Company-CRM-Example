@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     # Third party apps:
     # DJANGO REST APP
     'rest_framework',
+    # REST token auth (python manage.py migrate after this row :) )
+    'rest_framework.authtoken',
     # Cloudinary
     'cloudinary',
 
@@ -141,8 +143,15 @@ cloudinary.config(
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
+# }
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
