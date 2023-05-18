@@ -111,17 +111,17 @@ class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
                         status=status.HTTP_200_OK, )
 
 
-class ExampleView(APIView):
-    # when we have not configured settings file with : DEFAULT_AUTHENTICATION_CLASSES
+class GetUserByToken(APIView):
+    # following rows are used when we have not configured settings file with : DEFAULT_AUTHENTICATION_CLASSES
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-
-    # SERIALIZER FOR USER TOKEN
+    # authentication_classes = [TokenAuthentication]
 
     def get(self, request, format=None):
+        # show it to Alex with debugger
         token_string = request.auth.pk
         content = {
+            #  next two rows are used with basic auth
             # 'user': str(request.user),  # `django.contrib.auth.User` instance.
             # 'auth': str(request.auth),  # None
             'userNameByToken': str(Token.objects.get(key=token_string).user),

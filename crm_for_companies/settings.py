@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # Application apps:
     'crm_for_companies.api_companies',
     'crm_for_companies.api_employees',
+    'crm_for_companies.auth',
 
 ]
 
