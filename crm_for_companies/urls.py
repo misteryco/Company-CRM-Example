@@ -5,7 +5,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # enable browsable API
-    path('api-auth/', include('rest_framework.urls')),
+    path('api-accounts/', include('rest_framework.urls')),
 
     # urls for apps
     path('api_companies/', include('crm_for_companies.api_companies.urls')),

@@ -1,8 +1,14 @@
+# from django.contrib.auth import authenticate
+from django.contrib.auth import logout
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from rest_framework import generics as generic_rest_views, views as rest_basic_views, status, permissions
 import cloudinary.uploader
-from rest_framework.authentication import TokenAuthentication
+# from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import AllowAny, IsAuthenticated
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -10,12 +16,15 @@ from rest_framework.views import APIView
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
-from crm_for_companies.api_employees.serializers import EmployeeSerializerWithCompany, CreateEmployeeSerializer
+from crm_for_companies.api_employees.serializers import EmployeeSerializerWithCompany, CreateEmployeeSerializer, \
+    RegisterSerializer
 
 
 class EmployeeListApiView(rest_basic_views.APIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializerWithCompany
+    # to check authentication
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
@@ -111,20 +120,46 @@ class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
                         status=status.HTTP_200_OK, )
 
 
+# View showing that you can get user ID from Token
 class GetUserByToken(APIView):
     # following rows are used when we have not configured settings file with : DEFAULT_AUTHENTICATION_CLASSES
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
     # authentication_classes = [TokenAuthentication]
 
     def get(self, request, format=None):
         # show it to Alex with debugger
         token_string = request.auth.pk
         content = {
-            #  next two rows are used with basic auth
-            # 'user': str(request.user),  # `django.contrib.auth.User` instance.
-            # 'auth': str(request.auth),  # None
+            #  next two rows are used with basic accounts
+            # 'user': str(request.user),  # `django.contrib.accounts.User` instance.
+            # 'accounts': str(request.accounts),  # None
             'userNameByToken': str(Token.objects.get(key=token_string).user),
-            # 'auth': str(request.auth),  # None
+            # 'accounts': str(request.accounts),  # None
         }
         return Response(content)
+
+
+# Views connected to register and logout :
+class RegisterView(generic_rest_views.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
+
+
+class LogOutUser(APIView):
+
+    def post(self, request):
+        # show it to Alex with debugger
+        token_string = request.auth.pk
+        user = str(Token.objects.get(key=token_string).user)
+        try:
+            request.user.auth_token.delete()
+        except (AttributeError, ObjectDoesNotExist):
+            pass
+
+        # logout(request)
+
+        return Response({"success": f"Successfully logged out.<{user}>"},
+                        status=status.HTTP_200_OK)
