@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     # Third party apps:
     # DJANGO REST APP
     'rest_framework',
-    # REST token auth (python manage.py migrate after this row :) )
+    # REST token accounts (python manage.py migrate after this row :) )
     'rest_framework.authtoken',
     # Cloudinary
     'cloudinary',
@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     # Application apps:
     'crm_for_companies.api_companies',
     'crm_for_companies.api_employees',
-    'crm_for_companies.auth',
+    'crm_for_companies.acnt',
 
 ]
 
@@ -104,16 +104,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.accounts.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.accounts.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.accounts.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.accounts.password_validation.NumericPasswordValidator',
     },
 ]
 
