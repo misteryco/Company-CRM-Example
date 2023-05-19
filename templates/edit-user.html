@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>User Profile Details</h1>
+<div>
+    <div>
+        {% if object.get_full_name %}
+            <!-- user full name (if any) -->
+            <h1>{{ object.get_full_name }}</h1>
+        {% endif %}
+        <!-- user username -->
+        <p class="description">Username: {{ object.username }}</p>
+        <!-- user email -->
+        <p class="description">Email: {{ object.email }}</p>
+        <!-- user ID -->
+        <p class="description">ID: {{ user_ID }}</p>
+    </div>
+</div>
+
+
+<form id="create" method="post" enctype="multipart/form-data">
+
+    <h1>{{ form_title }}</h1>
+    <div style="display: flex; flex-direction: column">
+        {{ form }}
+        {% csrf_token %}
+        <input class="btn submit" type="submit" value="{{ form__button_title }}">
+
+    </div>
+</form>
+</body>
+</html>

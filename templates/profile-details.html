@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Details</title>
+</head>
+<body>
+
+<h1>User Profile Details</h1>
+<div class="info-section">
+    <div class="car-header">
+        {% if object.get_full_name %}
+            <!-- user full name (if any) -->
+            <h1>{{ object.get_full_name }}</h1>
+        {% endif %}
+        <!-- user username -->
+        <p class="description">Username: {{ object.username }}</p>
+        <!-- user email -->
+        <p class="description">Email: {{ object.email }}</p>
+        <!-- user ID -->
+        <p class="description">ID: {{ user_ID }}</p>
+    </div>
+</div>
+
+</body>
+</html>

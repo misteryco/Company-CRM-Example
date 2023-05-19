@@ -16,6 +16,7 @@ import os
 
 from pathlib import Path
 
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -168,3 +169,6 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+
+# AUTH_USER_MODEL = 'User'

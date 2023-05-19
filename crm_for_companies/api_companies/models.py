@@ -3,7 +3,6 @@ from django.db import models
 
 from cloudinary import models as cloudinary_models
 
-
 class Company(models.Model):
     NAME_MAX_LEN = 30
     NAME_MIN_LEN = 3
