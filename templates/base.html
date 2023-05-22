@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test App</title>
+</head>
+
+<body>
+<div id="box">
+    <header>
+        <!-- Navigation Bar -->
+        <h1><a class="index-navigation" href="{% url 'Home page' %}">Homepage</a></h1>
+        <nav>
+{#                    <a href="{% url 'Details' %}"></a>#}
+{#                    <p>|</p>#}
+{#                    <a href="{% url 'Edit' %}">Tasks</a>#}
+{#                    <p>|</p>#}
+
+        </nav>
+    </header>
+
+    {% block content_page %}
+
+    {% endblock %}
+
+    <!-- footer -->
+    <footer>
+        &copy;Some works 2022. Some rights reserved.
+    </footer>
+
+</div>
+</body>
+</html>

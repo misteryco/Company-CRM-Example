@@ -23,8 +23,12 @@
         <h1>{{ form_title }}</h1>
         <div style="display: flex; flex-direction: column">
             {{ form }}
-            {% csrf_token %}
-            <input class="btn submit" type="submit" value="Edit User">
+
+            {#            removed for showcase#}
+            {#            {% csrf_token %}#}
+            {#            removed for showcase#}
+
+            <input class="btn submit" type="submit" value="{{ form__button_title }}">
 
         </div>
     </form>

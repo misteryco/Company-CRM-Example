@@ -1,9 +1,23 @@
 from django.contrib.auth import views as auth_views, mixins as auth_mixins, get_user_model, login
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import generic as views
 
+from django.views.decorators.csrf import csrf_protect
+
+from crm_for_companies.web.forms import EditUserForm
+
 UserModel = get_user_model()
+
+
+class HomePage(views.ListView):
+    model = UserModel
+    template_name = 'index.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return context
 
 
 # class UserDetailsView(auth_mixins.LoginRequiredMixin, views.DetailView):
@@ -19,8 +33,25 @@ class UserDetailsView(views.DetailView):
         return context
 
 
-class EditUserView(views.UpdateView):
-    template_name = 'edit-user.html'
+@csrf_protect
+def edit_user_view(request, pk):
+    this_user = UserModel.objects.filter(pk=pk).get()
+    if request.method == 'POST':
+        form = EditUserForm(request.POST, instance=this_user)
+        if form.is_valid():
+            form.save()
+            return redirect('Details', pk=this_user.pk)
+    else:
+        form = EditUserForm(instance=this_user)
+    context = {
+        'form': form,
+        'object': this_user,
+    }
+    return render(request, template_name='edit-user.html', context=context)
+
+
+class EditUserNoCSRFTView(views.UpdateView):
+    template_name = 'edit-user-no-csrft.html'
     model = UserModel
     fields = ('username', 'email',)
 

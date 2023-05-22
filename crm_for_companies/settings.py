@@ -16,7 +16,6 @@ import os
 
 from pathlib import Path
 
-
 env = environ.Env()
 environ.Env.read_env()
 
@@ -32,7 +31,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', 'http://localhost:63342/']
 
 # Application definition
 
@@ -63,7 +62,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # disabled fot test purposes
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -170,5 +170,5 @@ REST_FRAMEWORK = {
     ],
 }
 
-
+CSRF_TRUSTED_ORIGINS = ['http://localhost:63342']
 # AUTH_USER_MODEL = 'User'
