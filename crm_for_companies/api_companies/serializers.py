@@ -1,8 +1,14 @@
 from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 
-from crm_for_companies.api_companies.models import Company
+from crm_for_companies.api_companies.models import Company, UserModel
 from crm_for_companies.api_employees.models import Employee
+
+
+class ShortUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('pk', 'username',)
 
 
 class ShortEmployeeSerializer(serializers.ModelSerializer):
@@ -38,6 +44,8 @@ class CompanySerializerWithEmployees(serializers.ModelSerializer):
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    owner = ShortUserSerializer(many=True)
+
     class Meta:
         model = Company
         fields = '__all__'
@@ -50,6 +58,8 @@ class CompanySerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         instance.logo = instance.logo
+        # list_of_owners = [obj.username for obj in instance.owner.all()]
+        # print(list_of_owners)
         # instance.logo = instance.logo.url
         new_representation = super().to_representation(instance)
 

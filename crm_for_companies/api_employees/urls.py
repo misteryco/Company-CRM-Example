@@ -10,6 +10,7 @@ urlpatterns = (
     path('details/<int:pk>', EmployeeDetailsApiView.as_view(), name='api details employee'),
     path('update/<int:pk>', EmployeeUpdateApiView.as_view(), name='api update employee'),
     path('delete/<int:pk>', EmployeeDeleteApiView.as_view(), name='api delete employee'),
+
     path('get-user-token/', GetUserByToken.as_view(), name='example view'),
     path('obtain-auth-token/', obtain_auth_token, name='api_token_auth'),
     path('register-user-by-id/', RegisterView.as_view(), name='api_token_auth'),
