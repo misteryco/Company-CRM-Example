@@ -1,16 +1,51 @@
 import cloudinary.uploader
 from django.shortcuts import get_object_or_404
 from rest_framework import views as rest_basic_views, status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 
-from crm_for_companies.api_companies.models import Company
+from crm_for_companies.api_companies.models import Company, UserModel
 from crm_for_companies.api_companies.serializers import CompanySerializer, CompanyCreateSerializer, \
     CompanySerializerWithEmployees
+
+
+class IsCompanyOwner(BasePermission):
+    message = 'List companies not allowed.'
+    print("OUT12345")
+
+    def has_permission(self, request, view):
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            # print("has_perm_not_Auth")
+            return False
+        # Allow access for superusers
+        if request.user.is_superuser:
+            # print("has_perm_super_user")
+            return True
+        # Allow access if the user is the owner of the book
+        if request.method in SAFE_METHODS:
+            # print("has_perm_safe")
+            return True
+        # print("has_perm_False")
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        print("in_has_object_permission")
+        # Allow access for superusers
+        if request.user.is_superuser:
+            return True
+
+        # Following row is query in Django that retrieves instances of the UserModel where the related company has an
+        # owner attribute that matches the request.user.
+        # print(request.user in UserModel.objects.filter(company__owner=request.user))
+        return request.user in UserModel.objects.filter(company__owner=request.user)
 
 
 class CompanyListApiView(rest_basic_views.APIView):
     queryset = Company.objects.all()
     serializer_class = CompanySerializerWithEmployees
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
@@ -44,12 +79,15 @@ class CreateCompanyApiView(rest_basic_views.APIView):
 
 
 class DetailsCompanyApiView(rest_basic_views.APIView):
+    authentication_classes = (TokenAuthentication,)
     http_method_names = ['get', 'delete', 'put']
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    permission_classes = (IsCompanyOwner,)
 
     def get(self, request, pk):
         instance = self.serializer_class(get_object_or_404(Company, pk=pk))
+        self.check_object_permissions(self.request, instance)
 
         return Response(instance.data)
 
