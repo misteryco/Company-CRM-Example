@@ -12,22 +12,18 @@ from crm_for_companies.api_companies.serializers import CompanySerializer, Compa
 
 class IsCompanyOwner(BasePermission):
     message = 'List companies not allowed.'
-    print("OUT12345")
 
     def has_permission(self, request, view):
         # Check if the user is authenticated
         if not request.user.is_authenticated:
-            # print("has_perm_not_Auth")
             return False
         # Allow access for superusers
         if request.user.is_superuser:
-            # print("has_perm_super_user")
             return True
         # Allow access if the user is the owner of the book
         if request.method in SAFE_METHODS:
-            # print("has_perm_safe")
             return True
-        # print("has_perm_False")
+
         return False
 
     def has_object_permission(self, request, view, obj):
@@ -35,10 +31,8 @@ class IsCompanyOwner(BasePermission):
         # Allow access for superusers
         if request.user.is_superuser:
             return True
-
         # Following row is query in Django that retrieves instances of the UserModel where the related company has an
         # owner attribute that matches the request.user.
-        # print(request.user in UserModel.objects.filter(company__owner=request.user))
         return request.user in UserModel.objects.filter(company__owner=request.user)
 
 
@@ -79,7 +73,6 @@ class CreateCompanyApiView(rest_basic_views.APIView):
 
 
 class DetailsCompanyApiView(rest_basic_views.APIView):
-    # authentication_classes = (TokenAuthentication,)
     http_method_names = ['get', 'delete', 'put']
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
