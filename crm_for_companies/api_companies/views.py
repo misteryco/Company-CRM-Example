@@ -79,10 +79,11 @@ class CreateCompanyApiView(rest_basic_views.APIView):
 
 
 class DetailsCompanyApiView(rest_basic_views.APIView):
-    authentication_classes = (TokenAuthentication,)
+    # authentication_classes = (TokenAuthentication,)
     http_method_names = ['get', 'delete', 'put']
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+
     permission_classes = (IsCompanyOwner,)
 
     def get(self, request, pk):
