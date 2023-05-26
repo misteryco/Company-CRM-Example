@@ -8,5 +8,5 @@ urlpatterns = (
     # path('edit/<int:pk>/', edit_user_view, name='Edit'),  # protected with decorator
     # path('edit-cookie-protected/<int:pk>/', edit_user_cookie_protection_view, name='Edit Cookie'),
     # protected with cookie
-    path('edit-no-csrft/<int:pk>/', EditUserView.as_view(), name='Edit username and email form'),
+    path('edit-no-csrft/<int:pk>/', EditUserView.as_view(), name='Edit'),
 )
