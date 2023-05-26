@@ -21,8 +21,6 @@ class HomePage(views.ListView):
         return context
 
 
-# class UserDetailsView(auth_mixins.LoginRequiredMixin, views.DetailView):
-# class GuiPage(views.DetailView):
 class UserDetailsView(views.DetailView):
     template_name = 'profile-details.html'
     model = UserModel
@@ -33,50 +31,50 @@ class UserDetailsView(views.DetailView):
         context['user_ID'] = object_pk
         return context
 
+# disabled after re-enabling CSRF middleware in settings file
+# @csrf_protect
+# def edit_user_view(request, pk):
+#     this_user = UserModel.objects.filter(pk=pk).get()
+#     if request.method == 'POST':
+#         form = EditUserForm(request.POST, instance=this_user)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('Details', pk=this_user.pk)
+#     else:
+#         form = EditUserForm(instance=this_user)
+#     context = {
+#         'form': form,
+#         'object': this_user,
+#     }
+#     return render(request, template_name='edit-user.html', context=context)
 
-@csrf_protect
-def edit_user_view(request, pk):
-    this_user = UserModel.objects.filter(pk=pk).get()
-    if request.method == 'POST':
-        form = EditUserForm(request.POST, instance=this_user)
-        if form.is_valid():
-            form.save()
-            return redirect('Details', pk=this_user.pk)
-    else:
-        form = EditUserForm(instance=this_user)
-    context = {
-        'form': form,
-        'object': this_user,
-    }
-    return render(request, template_name='edit-user.html', context=context)
+# disabled after re-enabling CSRF middleware in settings file
+# def edit_user_cookie_protection_view(request, pk):
+#     this_user = UserModel.objects.filter(pk=pk).get()
+#     csrf_token_value = "55555"
+#     if request.method == 'POST':
+#         # Verify CSRF token
+#         csrf_token = request.COOKIES.get('csrftoken')
+#         if not csrf_token or csrf_token != csrf_token_value:
+#             return HttpResponseBadRequest('Invalid CSRF token')
+#         # Process the POST request
+#         form = EditUserForm(request.POST, instance=this_user)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('Details', pk=this_user.pk)
+#     else:
+#         form = EditUserForm(instance=this_user)
+#     context = {
+#         'form': form,
+#         'object': this_user,
+#     }
+#
+#     response = render(request, template_name='edit-user.html', context=context)
+#     response.set_cookie(key='csrftoken', value=csrf_token_value, samesite='Strict')
+#     return response
 
 
-def edit_user_cookie_protection_view(request, pk):
-    this_user = UserModel.objects.filter(pk=pk).get()
-    csrf_token_value = "55555"
-    if request.method == 'POST':
-        # Verify CSRF token
-        csrf_token = request.COOKIES.get('csrftoken')
-        if not csrf_token or csrf_token != csrf_token_value:
-            return HttpResponseBadRequest('Invalid CSRF token')
-        # Process the POST request
-        form = EditUserForm(request.POST, instance=this_user)
-        if form.is_valid():
-            form.save()
-            return redirect('Details', pk=this_user.pk)
-    else:
-        form = EditUserForm(instance=this_user)
-    context = {
-        'form': form,
-        'object': this_user,
-    }
-
-    response = render(request, template_name='edit-user.html', context=context)
-    response.set_cookie(key='csrftoken', value=csrf_token_value, samesite='Strict')
-    return response
-
-
-class EditUserNoCSRFTView(views.UpdateView):
+class EditUserView(views.UpdateView):
     template_name = 'edit-user-no-csrft.html'
     model = UserModel
     fields = ('username', 'email',)
