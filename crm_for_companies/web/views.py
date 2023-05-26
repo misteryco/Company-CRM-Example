@@ -31,6 +31,23 @@ class UserDetailsView(views.DetailView):
         context['user_ID'] = object_pk
         return context
 
+
+class EditUserView(views.UpdateView):
+    template_name = 'edit-user-no-csrft.html'
+    model = UserModel
+    fields = ('username', 'email',)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = 'Edit Profile'
+        context['form__button_title'] = 'Save Changes'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'Details',
+            kwargs={'pk': self.object.pk})
+
 # disabled after re-enabling CSRF middleware in settings file
 # @csrf_protect
 # def edit_user_view(request, pk):
@@ -72,20 +89,3 @@ class UserDetailsView(views.DetailView):
 #     response = render(request, template_name='edit-user.html', context=context)
 #     response.set_cookie(key='csrftoken', value=csrf_token_value, samesite='Strict')
 #     return response
-
-
-class EditUserView(views.UpdateView):
-    template_name = 'edit-user-no-csrft.html'
-    model = UserModel
-    fields = ('username', 'email',)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form_title'] = 'Edit Profile'
-        context['form__button_title'] = 'Save Changes'
-        return context
-
-    def get_success_url(self):
-        return reverse_lazy(
-            'Details',
-            kwargs={'pk': self.object.pk})
