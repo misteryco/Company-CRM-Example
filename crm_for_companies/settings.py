@@ -143,7 +143,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/' - original
+STATIC_URL = '/static/'
+# Following row is required for collectstatic command
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 cloudinary.config(
     cloud_name=env('CLOUDINARY_CLOUD_NAME'),
