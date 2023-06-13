@@ -31,8 +31,16 @@ class IsCompanyOwner(BasePermission):
         # Allow access for superusers
         if request.user.is_superuser:
             return True
-        # Following row is query in Django that retrieves instances of the UserModel where the related company has an
+        # Following row is query retrieves instances of the UserModel where the related company has an
         # owner attribute that matches the request.user.
+        # return request.user in UserModel.objects.filter(company__owner=request.user)
+        # print(obj.data['id'])
+        # a = Company.objects.filter(pk=obj.data['id']).get()
+        # b = UserModel.objects.filter(company__owner=request.user).all()
+        # print(list(b))  # filter dict
+        # owners = [owner for owner in b]
+        # for o in b:
+        #     print(o)
         return request.user in UserModel.objects.filter(company__owner=request.user)
 
 

@@ -1,7 +1,10 @@
 # from django.contrib.auth import authenticate
+import time
+
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import generics as generic_rest_views, views as rest_basic_views, status, permissions
 import cloudinary.uploader
@@ -18,6 +21,8 @@ from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
 from crm_for_companies.api_employees.serializers import EmployeeSerializerWithCompany, CreateEmployeeSerializer, \
     RegisterSerializer
+
+from crm_for_companies.api_employees.tasks import send_welcome_email_to_new_users
 
 
 class EmployeeListApiView(rest_basic_views.APIView):
@@ -146,6 +151,21 @@ class RegisterView(generic_rest_views.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+
+    def post(self, request):
+        user = User(**request.data)
+        user.set_password(user.password)
+        try:
+            user.save()
+            # Following row show what happen when there is ASYNC
+            # time.sleep(60)
+            # !!!! To run function through celery "delay" should be used as in the example below delay accept arguments!
+            send_welcome_email_to_new_users.delay(user.username, user.email)
+        except IntegrityError as ex:
+            return Response({"message": f"{ex}"}, status=status.HTTP_409_CONFLICT)
+
+        return Response({"success": f"Successfully registered.<{user}>"},
+                        status=status.HTTP_201_CREATED)
 
 
 class LogOutUser(APIView):

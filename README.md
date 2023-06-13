@@ -38,6 +38,10 @@ CLOUDINARY_API_KEY='YOUR_CLOUDINARY_API_KEY'
 
 CLOUDINARY_API_SECRET='YOUR_CLOUDINARY_API_SECRET'
 
+EMAIL_HOST_USER='YOUR_EMAIL@gmail.com'
+
+EMAIL_HOST_PASSWORD='YOUR_THIRD_PARTY_LOW_SECURITY_GOOGLE_PASSWORD'
+
 
 HOW TO USE:
 
@@ -50,6 +54,15 @@ python manage.py makemigrations
 python manage.py createsuperuser
 
 python manage.py migrate 
+
+===== START NEW COMMAND FOR CELERY ====
+
+IN NEW TERMINAL In "crm_for_companies" folder run:
+
+celery -A crm_for_companies worker -l info -E
+
+===== end NEW COMMAND FOR CELERY ====
+
 
 python manage.py runserver
 
@@ -86,6 +99,13 @@ Employess:
 
 · DELETE 'localhost:8000/api_ employees/delete/{EMPLOYEE_ID}' – delete one employee.
 
+Users:
+
+· POST 'localhost:8000/api_employees/register-user-by-id/' – create new user and sends email.
+
+· GET 'localhost:8000/api_employees/obtain-auth-token/' – returns token after the username and password are provided.
+
+· POST 'localhost:8000/api_employees/obtain-auth-token/' – log out and delete token.
 
 
 
@@ -122,6 +142,21 @@ Employee JSON Format:
     
     "company": Integer
     
+}
+
+New user JSON Format:
+
+{
+
+    "username": "String",
+
+    "password": "String",
+
+    "email": "String",
+
+    "first_name": "String",
+
+    "last_name": "String"
 }
 
 

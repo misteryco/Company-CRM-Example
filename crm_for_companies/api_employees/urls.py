@@ -11,8 +11,8 @@ urlpatterns = (
     path('update/<int:pk>', EmployeeUpdateApiView.as_view(), name='api update employee'),
     path('delete/<int:pk>', EmployeeDeleteApiView.as_view(), name='api delete employee'),
 
-    path('get-user-token/', GetUserByToken.as_view(), name='example view'),
+    path('get-user-token/', GetUserByToken.as_view(), name='get user by token'),
     path('obtain-auth-token/', obtain_auth_token, name='api_token_auth'),
-    path('register-user-by-id/', RegisterView.as_view(), name='api_token_auth'),
+    path('register-user-by-id/', RegisterView.as_view(), name='register_user'),
     path('log-out-user/', LogOutUser.as_view(), name='log_out_user'),
 )
