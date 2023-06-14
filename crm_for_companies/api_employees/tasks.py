@@ -1,5 +1,6 @@
 import logging
 import time
+from datetime import datetime
 
 from celery import shared_task
 from django.core.mail import send_mail
@@ -14,3 +15,15 @@ def send_welcome_email_to_new_users(name, email):
               from_email=settings.EMAIL_HOST_USER,
               recipient_list=(email,))
     logging.info(f"Welcome email was send to {name} with {email}")
+
+
+@shared_task
+def sum_a_b(a, b):
+    time.sleep(7)
+    return a + b
+
+
+@shared_task
+def print_messages(message):
+    time.sleep(10)
+    print(f"Time form scheduled task: {datetime.now().time()}. Additional argument: {message}")

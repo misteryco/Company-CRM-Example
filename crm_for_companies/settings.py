@@ -50,11 +50,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     # Cloudinary
     'cloudinary',
+    # Django Celery Beat
+    'django_celery_beat',
 
     # Application apps:
     'crm_for_companies.api_companies',
     'crm_for_companies.api_employees',
-    # 'crm_for_companies.acnt',
 
 ]
 
@@ -201,6 +202,7 @@ REST_FRAMEWORK = {
 
 # CELERY settings
 CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
+CELERY_RESULT_BACKEND = 'db+postgresql://postgres:postgres@localhost/crm_tables'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
