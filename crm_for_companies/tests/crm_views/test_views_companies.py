@@ -64,23 +64,55 @@ class TestCompanyListView(APITestCase):
                                                 )
 
     def test_get_all_companies(self):
+        # Logging user
         client.force_login(self.user)
+
+        # Taking logged user token
         response = self.client.post(reverse('api_token_auth'), self.sample_user)
         token = f"Token {response.data['token']}"
+
+        # Authorize client
         self.client.credentials(HTTP_AUTHORIZATION=token)
+
         # get API response
-        print(response.data)
-        response = self.client.get(reverse('get user by token'))
-        print(response.data)
         response = self.client.get(reverse('api list company'))
-        print(response.data)
-        # get data from db
+
+        # Get data from db
         companies = Company.objects.all()
         serializer = CompanySerializerWithEmployees(companies, many=True)
-        print(response.data)
-        self.assertEqual(response.data['data'], serializer.data)
+
+        # Test response:
         self.assertEqual(response.data['status'], 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_all_companies_no_authentication(self):
+        response = self.client.get(reverse('api list company'))
+        self.assertEqual(response.data['detail'], "Authentication credentials were not provided.")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # class TestCompany(APITestCase):
 #     def test_auth_user_name(self):
