@@ -11,7 +11,7 @@ from crm_for_companies.api_companies.serializers import CompanySerializer, Compa
 
 
 class IsCompanyOwner(BasePermission):
-    message = 'List companies not allowed.'
+    message = 'Only Owner can see company details.'
 
     def has_permission(self, request, view):
         # Check if the user is authenticated
@@ -20,7 +20,7 @@ class IsCompanyOwner(BasePermission):
         # Allow access for superusers
         if request.user.is_superuser:
             return True
-        # Allow access if the user is the owner of the book
+        # Allow access if the user is the owner
         if request.method in SAFE_METHODS:
             return True
 
