@@ -5,11 +5,12 @@ from django.urls import reverse
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_companies.serializers import CompanySerializerWithEmployees
 from crm_for_companies.tests.crm_views.test_views_setup import SetupFoRViewsTests
+from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
 
 client = Client()
 
 
-class TestCompanyListView(SetupFoRViewsTests):
+class TestCompanyListView(SetupFoRViewsTestsFactory):
 
     def test_get_all_companies(self):
         # Logging user

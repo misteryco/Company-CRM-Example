@@ -4,11 +4,12 @@ from django.urls import reverse
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.tests.crm_views.test_views_setup import SetupFoRViewsTests
+from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
 
 client = Client()
 
 
-class TestCompanyDetailsView(SetupFoRViewsTests):
+class TestCompanyDetailsView(SetupFoRViewsTestsFactory):
 
     def test_get_company_by_pk(self):
         # Authenticate user and get Token
