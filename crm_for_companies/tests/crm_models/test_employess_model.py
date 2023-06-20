@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 
 class TestCompanyModel(TestCase):
+    # Important part of test is to provide setUp environment so the DB can be purged after every test method
     def setUp(self):
         self.company = Company(
             name='12345',
