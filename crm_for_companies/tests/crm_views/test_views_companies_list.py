@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_companies.serializers import CompanySerializerWithEmployees
-from crm_for_companies.tests.crm_views.test_views_setup import SetupFoRViewsTests
+from rest_framework.test import APITestCase
 from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
 
 client = Client()
@@ -33,6 +33,8 @@ class TestCompanyListView(SetupFoRViewsTestsFactory):
         # Test response:
         self.assertEqual(response.data['status'], 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+class TestCompanyListViewNoAuth(APITestCase):
 
     def test_get_all_companies_no_authentication(self):
         response = self.client.get(reverse('api list company'))

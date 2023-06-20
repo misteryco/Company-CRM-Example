@@ -44,3 +44,4 @@ class TestCompanyDetailsView(SetupFoRViewsTestsFactory):
         # Test response:
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], "Only Owner can see company details.")
+        self.company_one.owner.clear()
