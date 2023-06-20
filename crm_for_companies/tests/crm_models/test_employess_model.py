@@ -5,20 +5,21 @@ from django.core.exceptions import ValidationError
 
 
 class TestCompanyModel(TestCase):
-    company = Company(
-        name='12345',
-        description='A new company 1 description',
-        logo='D:/03.jpg',
-    )
-    employee = Employee(
-        first_name="aaaaaaa",
-        last_name="aaaaaaa",
-        date_of_birth="2006-07-04",
-        photo="D:/03.jpg",
-        position="aaa",
-        salary=100,
-        company=company
-    )
+    def setUp(self):
+        self.company = Company(
+            name='12345',
+            description='A new company 1 description',
+            logo='D:/03.jpg',
+        )
+        self.employee = Employee(
+            first_name="aaaaaaa",
+            last_name="aaaaaaa",
+            date_of_birth="2006-07-04",
+            photo="D:/03.jpg",
+            position="aaa",
+            salary=100,
+            company=self.company
+        )
 
     def test_user_model_when_LAST_name_is_too_short__expect_exception(self):
         self.company.save()
