@@ -5,6 +5,7 @@ from django.test import Client
 from django.urls import reverse
 
 from crm_for_companies.api_companies.models import Company
+from crm_for_companies.api_employees.models import Employee
 from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
 
 client = Client()
@@ -40,3 +41,8 @@ class TestCompanyCreateView(SetupFoRViewsTestsFactory):
         self.assertEqual(response.data['status'], 201)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['data']['name'], new_company.name)
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()

@@ -11,12 +11,12 @@ from crm_for_companies.api_employees.models import Employee
 from crm_for_companies.api_employees.serializers import EmployeeSerializerWithCompany
 
 client = Client()
+User = get_user_model()
 
 
 class TestEmployeeListView(APITestCase):
 
     def setUp(self):
-        User = get_user_model()
         username = 'dan'
         user_password = '12345'
         user_email = "some3@crazy.com"
@@ -85,6 +85,11 @@ class TestEmployeeListView(APITestCase):
         # self.assertEqual(response.data['status'], 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()
+
 
 class TestEmployeeSingleView(TestCase):
 
@@ -148,6 +153,11 @@ class TestEmployeeSingleView(TestCase):
 
         self.assertEqual(response.data['status'], 404)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()
 
 
 class TestCreateEmployee(APITestCase):
@@ -250,7 +260,6 @@ class TestCreateEmployee(APITestCase):
     #         reverse('api create employee'), self.valid_payload)
     #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-
     def test_create_invalid_company_employee(self):
         client.force_login(self.user)
         response = client.post(
@@ -286,6 +295,11 @@ class TestCreateEmployee(APITestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()
 
 
 class UpdateSingleEmployeeTest(TestCase):
@@ -381,6 +395,7 @@ class UpdateSingleEmployeeTest(TestCase):
             "salary": 100,
             "company": 42
         }
+
     #
     # def test_update_valid_employee(self):
     #     client.force_login(self.user)
@@ -426,6 +441,11 @@ class UpdateSingleEmployeeTest(TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()
 
 
 class DeleteCompanyTest(TestCase):
@@ -484,3 +504,8 @@ class DeleteCompanyTest(TestCase):
         response = client.delete(
             reverse('api delete employee', kwargs={'pk': 100}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()

@@ -1,19 +1,12 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status
 from rest_framework.test import APITestCase
-from django.test import TestCase, Client
-from django.urls import reverse
 
 from crm_for_companies.api_companies.models import Company
-from crm_for_companies.api_employees.models import Employee
-from crm_for_companies.api_employees.serializers import EmployeeSerializerWithCompany
 
-client = Client()
-User = get_user_model()
 
-class TestCreateEmployee(APITestCase):
+class TestViewSetupEmployee(APITestCase):
     def setUp(self):
-
+        User = get_user_model()
         username = 'dan'
         user_password = '12345'
         user_email = "some3@crazy.com"
@@ -96,22 +89,3 @@ class TestCreateEmployee(APITestCase):
             "salary": 100,
             "company": 42
         }
-
-    def test_create_valid_employee(self):
-        client.force_login(self.user)
-        # Logging and taking user token for not owner user
-        response = self.client.post(reverse('api_token_auth'), self.sample_user)
-        token = f"Token {response.data['token']}"
-
-        # Authorize client
-        self.client.credentials(HTTP_AUTHORIZATION=token)
-        # get API response
-        # response = self.client.get(reverse('api list employee'))
-        response = client.post(
-            reverse('api create employee'), self.valid_payload)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    def tearDown(self):
-        Employee.objects.all().delete()
-        Company.objects.all().delete()
-        User.objects.all().delete()

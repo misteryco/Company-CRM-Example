@@ -1,15 +1,19 @@
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from django.test import Client
 from django.urls import reverse
 
 from crm_for_companies.api_companies.models import Company
+from crm_for_companies.api_employees.models import Employee
 from crm_for_companies.tests.crm_views.test_views_setup import SetupFoRViewsTests
 from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
 
 client = Client()
+User = get_user_model()
 
 
-class TestCompanyDetailsView(SetupFoRViewsTestsFactory):
+class TestCompanyDetailsView(SetupFoRViewsTests):
+    multi_db = True
 
     def test_get_company_by_pk(self):
         # Authenticate user and get Token
@@ -45,3 +49,8 @@ class TestCompanyDetailsView(SetupFoRViewsTestsFactory):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], "Only Owner can see company details.")
         self.company_one.owner.clear()
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()

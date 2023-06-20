@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from django.test import Client
 from django.urls import reverse
@@ -5,9 +6,12 @@ from django.urls import reverse
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_companies.serializers import CompanySerializerWithEmployees
 from rest_framework.test import APITestCase
+
+from crm_for_companies.api_employees.models import Employee
 from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
 
 client = Client()
+User = get_user_model()
 
 
 class TestCompanyListView(SetupFoRViewsTestsFactory):
@@ -33,6 +37,13 @@ class TestCompanyListView(SetupFoRViewsTestsFactory):
         # Test response:
         self.assertEqual(response.data['status'], 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.company_one.owner.clear()
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()
+
 
 class TestCompanyListViewNoAuth(APITestCase):
 
@@ -40,3 +51,8 @@ class TestCompanyListViewNoAuth(APITestCase):
         response = self.client.get(reverse('api list company'))
         self.assertEqual(response.data['detail'], "Authentication credentials were not provided.")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def tearDown(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()
