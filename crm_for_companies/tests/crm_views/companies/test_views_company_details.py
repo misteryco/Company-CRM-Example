@@ -14,7 +14,6 @@ User = get_user_model()
 
 
 class TestCompanyDetailsView(SetupForViewsTestsFactory):
-    multi_db = True
 
     def test_get_company_by_pk(self):
         # Authenticate user and get Token
@@ -26,10 +25,10 @@ class TestCompanyDetailsView(SetupForViewsTestsFactory):
 
         # get API response
         response = self.client.get(reverse('api details company', kwargs={'pk': self.company_one.pk}))
-        # print(f"1-{response.data}")
-        # print(Company.objects.first().pk)
+        print(f"1-{response.data}")
+        print(Company.objects.first().pk)
         # Get data from db
-        company_data = Company.objects.filter(pk=self.company_one.pk).get()
+        company_data = Company.objects.filter(name__exact=self.company_one.name).get()
         # UserModel.objects.filter(company__owner=self.user)
 
         # Test response:
