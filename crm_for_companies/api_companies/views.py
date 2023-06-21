@@ -27,7 +27,7 @@ class IsCompanyOwner(BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        print("in_has_object_permission")
+        # print("in_has_object_permission")
         # Allow access for superusers
         if request.user.is_superuser:
             return True

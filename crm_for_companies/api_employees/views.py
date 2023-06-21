@@ -160,7 +160,7 @@ class RegisterView(generic_rest_views.CreateAPIView):
             # # Following row show what happen when there is ASYNC
             # # time.sleep(60)
             # # !!!! To run function through celery "delay" should be used as in the example below delay accept arguments!
-            # send_welcome_email_to_new_users.delay(user.username, user.email)
+            send_welcome_email_to_new_users.delay(user.username, user.email)
         except IntegrityError as ex:
             return Response({"message": f"{ex}"}, status=status.HTTP_409_CONFLICT)
 

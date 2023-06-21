@@ -5,8 +5,8 @@ from django.urls import reverse
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
-from crm_for_companies.tests.crm_views.test_views_setup import SetupFoRViewsTests
-from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
+from crm_for_companies.tests.crm_views.views_setup import SetupFoRViewsTests
+# from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupForViewsTestsFactory
 
 client = Client()
 User = get_user_model()

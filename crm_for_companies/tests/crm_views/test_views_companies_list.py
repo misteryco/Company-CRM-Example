@@ -8,13 +8,13 @@ from crm_for_companies.api_companies.serializers import CompanySerializerWithEmp
 from rest_framework.test import APITestCase
 
 from crm_for_companies.api_employees.models import Employee
-from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupFoRViewsTestsFactory
+from crm_for_companies.tests.crm_views.views_setup_with_factory import SetupForViewsTestsFactory
 
 client = Client()
 User = get_user_model()
 
 
-class TestCompanyListView(SetupFoRViewsTestsFactory):
+class TestCompanyListView(SetupForViewsTestsFactory):
 
     def test_get_all_companies(self):
         # Logging user

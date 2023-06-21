@@ -22,7 +22,7 @@ user_password_two = '12345'
 user_email_two = "some33@crazy.com"
 
 
-class SetupFoRViewsTestsFactory(APITestCase):
+class SetupForViewsTestsFactory(APITestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username=username,

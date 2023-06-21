@@ -1,7 +1,6 @@
 [run]
 omit =
     */tests/*
-    */web/*
     */fixtures/*
 
 [report]
