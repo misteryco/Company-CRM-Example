@@ -25,6 +25,11 @@ user_email_two = "some33@crazy.com"
 class SetupForViewsTestsFactory(APITestCase):
 
     def setUp(self):
+        Employee.objects.all().delete()
+        Company.objects.all().delete()
+        User.objects.all().delete()
+
+        print("SetupForViewsTestsFactory")
         self.user = User.objects.create_user(username=username,
                                              email=user_email,
                                              password=user_password)
@@ -98,7 +103,8 @@ class SetupForViewsTestsFactory(APITestCase):
                                                                                         max=10000),
                                                      company=company_two
                                                      )
-        company_one.owner.set((1,))
+
+        company_one.owner.set((self.user.pk,))
 
         self.company_one = company_one
         self.company_two = company_two
@@ -110,7 +116,7 @@ class SetupForViewsTestsFactory(APITestCase):
             "photo": "/home/yd/Pictures/py/3789820.png",
             "position": "aaa",
             "salary": 100,
-            "company": 1
+            "company": self.company_one.pk
         }
 
         self.invalid_company_payload = {
@@ -130,7 +136,7 @@ class SetupForViewsTestsFactory(APITestCase):
             "photo": "/home/yd/Pictures/py/3789820.png",
             "position": "aaa",
             "salary": 100,
-            "company": 42
+            "company": self.company_one.pk
         }
 
         self.invalid_second_name_payload = {
@@ -140,7 +146,7 @@ class SetupForViewsTestsFactory(APITestCase):
             "photo": "/home/yd/Pictures/py/3789820.png",
             "position": "aaa",
             "salary": 100,
-            "company": 42
+            "company": self.company_one.pk
         }
 
         self.invalid_date_payload = {
@@ -150,5 +156,11 @@ class SetupForViewsTestsFactory(APITestCase):
             "photo": "/home/yd/Pictures/py/3789820.png",
             "position": "aaa",
             "salary": 100,
-            "company": 42
+            "company": self.company_one.pk
         }
+
+    # def tearDown(self):
+    #     print("TearDown")
+    #     Employee.objects.all().delete()
+    #     Company.objects.all().delete()
+    #     User.objects.all().delete()
