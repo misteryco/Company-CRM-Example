@@ -10,8 +10,6 @@ urlpatterns = (
     path('log-out-user/', LogOutUser.as_view(), name='log_out_user'),
 )
 
-
-
 # from django.urls import path
 #
 # from crm_for_companies.web.views import UserDetailsView, HomePage, EditUserView

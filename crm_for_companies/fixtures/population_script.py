@@ -12,6 +12,7 @@ os.environ.setdefault(
 
 django.setup()
 
+# flake8: noqa
 """
 Pay attention to where we import the model class. We need to setup our Django setting (line 6–9) before importing it.
  Otherwise, the script won’t run correctly.
@@ -36,7 +37,6 @@ def populate_users():
             email=f"some_name{i}@domain.nm",
             password=make_password('12345'),
         )
-
 
 
 def populate_companies():

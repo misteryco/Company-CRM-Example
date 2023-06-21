@@ -21,7 +21,7 @@ username_two = 'dan2'
 user_password_two = '12345'
 user_email_two = "some33@crazy.com"
 
-
+# flake8: noqa
 class SetupForViewsTestsFactory(APITestCase):
 
     def setUp(self):
@@ -29,7 +29,7 @@ class SetupForViewsTestsFactory(APITestCase):
         Company.objects.all().delete()
         User.objects.all().delete()
 
-        print("SetupForViewsTestsFactory")
+        # print("SetupForViewsTestsFactory")
         self.user = User.objects.create_user(username=username,
                                              email=user_email,
                                              password=user_password)

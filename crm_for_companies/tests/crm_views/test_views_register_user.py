@@ -11,6 +11,7 @@ client = Client()
 User = get_user_model()
 
 
+# flake8: noqa
 class TestCompanyListView(SetupForViewsTestsFactory):
     def test_take_token_for_existing_user_success(self):
         # Taking existing user token

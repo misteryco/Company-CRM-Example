@@ -1,8 +1,8 @@
-from django.test import TestCase
+# from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIRequestFactory, APITestCase
 
-from rest_framework.response import Response
+# from rest_framework.response import Response
 from rest_framework import status
 from unittest.mock import patch
 from crm_for_companies.api_employees.views import RegisterView
@@ -16,8 +16,8 @@ class RegisterViewTestCase(APITestCase):
                                {'username': 'testuser', 'password': 'testpassword', 'email': 'test@example.com'})
         request.data = {'username': 'testuser', 'password': 'testpassword', 'email': 'test@example.com'}
 
-        # Create a mock response
-        mock_response = Response({"message": "Successfully registered.<Mock User>"}, status=status.HTTP_201_CREATED)
+        # # Create a mock response
+        # mock_response = Response({"message": "Successfully registered.<Mock User>"}, status=status.HTTP_201_CREATED)
 
         with patch('crm_for_companies.api_employees.views.User.objects') as mock_user_objects:
             with patch('crm_for_companies.api_employees.views.send_welcome_email_to_new_users') as mock_send_email:

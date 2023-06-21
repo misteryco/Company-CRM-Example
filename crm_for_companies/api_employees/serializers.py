@@ -1,15 +1,14 @@
 from datetime import date
 
-from cloudinary.cache.responsive_breakpoints_cache import instance
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.relations import PrimaryKeyRelatedField
+# from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.validators import UniqueValidator
 
-from crm_for_companies.api_companies.models import Company
+# from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_companies.serializers import ShortCompanySerializer
 from crm_for_companies.api_employees.models import Employee
 
@@ -61,6 +60,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+
     # password2 = serializers.CharField(write_only=True, required=True)
     # same password validation should be done in the frontend
 

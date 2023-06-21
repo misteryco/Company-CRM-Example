@@ -168,9 +168,7 @@ class RegisterView(generic_rest_views.CreateAPIView):
                         status=status.HTTP_201_CREATED)
 
 
-
 class LogOutUser(APIView):
-
     def post(self, request):
         # show it to Alex with debugger
         token_string = request.auth.pk

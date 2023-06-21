@@ -24,8 +24,9 @@ class TestCompanyCreateView(SetupForViewsTestsFactory):
         self.client.credentials(HTTP_AUTHORIZATION=token)
 
         # get API response
-        response = self.client.post(reverse(
-            'api create company'),
+        response = self.client.post(
+            reverse
+            ('api create company'),
             {
                 "name": "ComXXXX111",
                 "description": "Some data mor1111",
