@@ -17,11 +17,11 @@ def validate_age(value):
 
 
 class Employee(models.Model):
-    NAME_MAX_LEN = 50
+    NAME_MAX_LEN = 300
     NAME_MIN_LEN = 2
     DESCRIPTION_MIN_LENGTH = 10
     DESCRIPTION_MAX_LENGTH = 300
-    POSITION_MAX_LEN = 50
+    POSITION_MAX_LEN = 300
     POSITION_MIN_LEN = 2
 
     first_name = models.CharField(

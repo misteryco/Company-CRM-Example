@@ -8,7 +8,7 @@ UserModel = get_user_model()
 
 
 class Company(models.Model):
-    NAME_MAX_LEN = 30
+    NAME_MAX_LEN = 300
     NAME_MIN_LEN = 3
     DESCRIPTION_MIN_LENGTH = 10
     DESCRIPTION_MAX_LENGTH = 300

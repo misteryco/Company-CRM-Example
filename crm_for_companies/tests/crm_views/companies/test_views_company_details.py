@@ -5,14 +5,15 @@ from django.urls import reverse
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
-from crm_for_companies.tests.crm_views.views_setup import SetupFoRViewsTests
+from crm_for_companies.tests.crm_views.views_setup_with_factory import SetupForViewsTestsFactory
+
 # from crm_for_companies.tests.crm_views.test_views_setup_with_factory import SetupForViewsTestsFactory
 
 client = Client()
 User = get_user_model()
 
 
-class TestCompanyDetailsView(SetupFoRViewsTests):
+class TestCompanyDetailsView(SetupForViewsTestsFactory):
     multi_db = True
 
     def test_get_company_by_pk(self):
@@ -25,7 +26,8 @@ class TestCompanyDetailsView(SetupFoRViewsTests):
 
         # get API response
         response = self.client.get(reverse('api details company', kwargs={'pk': self.company_one.pk}))
-
+        # print(f"1-{response.data}")
+        # print(Company.objects.first().pk)
         # Get data from db
         company_data = Company.objects.filter(pk=self.company_one.pk).get()
         # UserModel.objects.filter(company__owner=self.user)
