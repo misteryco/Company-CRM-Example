@@ -1,0 +1,12 @@
+[flake8]
+ignore = F401, E501, E203, E251
+# F401 - "module 'module_name' imported but unused":
+# E501 - "line too long":
+# E203 - "whitespace before ':'":
+# E251 - "unexpected spaces around keyword / parameter equals":
+
+
+
+
+
+exclude = /home/yd/PycharmProjects/Company-CRM-Example/venv/*,/home/yd/PycharmProjects/Company-CRM-Example/templates/*,/home/yd/PycharmProjects/Company-CRM-Example/static/*,/home/yd/PycharmProjects/Company-CRM-Example/env/*,/home/yd/PycharmProjects/Company-CRM-Example/crm_for_companies/api_companies/migrations/*,/home/yd/PycharmProjects/Company-CRM-Example/crm_for_companies/api_employees/migrations/*
