@@ -6,12 +6,19 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
-from rest_framework import generics as generic_rest_views, views as rest_basic_views, status, permissions
+from rest_framework import (
+    generics as generic_rest_views,
+    views as rest_basic_views,
+    status,
+    permissions,
+)
 import cloudinary.uploader
+
 # from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -19,8 +26,11 @@ from rest_framework.views import APIView
 
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
-from crm_for_companies.api_employees.serializers import EmployeeSerializerWithCompany, CreateEmployeeSerializer, \
-    RegisterSerializer
+from crm_for_companies.api_employees.serializers import (
+    EmployeeSerializerWithCompany,
+    CreateEmployeeSerializer,
+    RegisterSerializer,
+)
 
 from crm_for_companies.api_employees.tasks import send_welcome_email_to_new_users
 
@@ -34,11 +44,13 @@ class EmployeeListApiView(rest_basic_views.APIView):
     def get(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
 
-        return Response({'data': serializer.data, 'status': status.HTTP_200_OK},
-                        status=status.HTTP_200_OK, )
+        return Response(
+            {"data": serializer.data, "status": status.HTTP_200_OK},
+            status=status.HTTP_200_OK,
+        )
 
     def get_queryset(self):
-        company_id = self.request.query_params.get('company_id')
+        company_id = self.request.query_params.get("company_id")
         queryset = self.queryset
 
         if company_id:
@@ -52,27 +64,39 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
     serializer_class = CreateEmployeeSerializer
 
     def post(self, request, *args, **kwargs):
-
         try:
-            Company.objects.get(pk=request.data['company'])
+            Company.objects.get(pk=request.data["company"])
         except Company.DoesNotExist:
-            return Response({'errors': f"Company with id:{request.data['company']} does not exist.",
-                             'status': status.HTTP_400_BAD_REQUEST},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "errors": f"Company with id:{request.data['company']} does not exist.",
+                    "status": status.HTTP_400_BAD_REQUEST,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
 
         if serializer.is_valid(raise_exception=True):
-            file = request.data.get('photo')
+            file = request.data.get("photo")
             photo = cloudinary.uploader.upload(file)
-            serializer.validated_data['photo'] = photo['url']
+            serializer.validated_data["photo"] = photo["url"]
             serializer.save()
-            return Response({'data': serializer.data, 'errors': serializer.errors, 'status': status.HTTP_201_CREATED},
-                            status=status.HTTP_201_CREATED, )
+            return Response(
+                {
+                    "data": serializer.data,
+                    "errors": serializer.errors,
+                    "status": status.HTTP_201_CREATED,
+                },
+                status=status.HTTP_201_CREATED,
+            )
 
-        return Response({'errors': serializer.errors, 'status': status.HTTP_400_BAD_REQUEST},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"errors": serializer.errors, "status": status.HTTP_400_BAD_REQUEST},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class EmployeeUpdateApiView(generic_rest_views.RetrieveUpdateAPIView):
@@ -81,23 +105,35 @@ class EmployeeUpdateApiView(generic_rest_views.RetrieveUpdateAPIView):
 
     def put(self, request, *args, **kwargs):
         try:
-            Company.objects.get(pk=request.data['company'])
+            Company.objects.get(pk=request.data["company"])
         except Company.DoesNotExist:
-            return Response({'errors': f"Company with id:{request.data['company']} does not exist.",
-                             'status': status.HTTP_400_BAD_REQUEST},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "errors": f"Company with id:{request.data['company']} does not exist.",
+                    "status": status.HTTP_400_BAD_REQUEST,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        instance = get_object_or_404(Employee, pk=kwargs['pk'])
+        instance = get_object_or_404(Employee, pk=kwargs["pk"])
         serializer = self.serializer_class(instance, data=request.data)
 
         if serializer.is_valid():
             print(f"valid check{serializer.is_valid()}")
             serializer.save()
-            return Response({'data': serializer.data, 'errors': serializer.errors, 'status': status.HTTP_200_OK},
-                            status=status.HTTP_200_OK, )
+            return Response(
+                {
+                    "data": serializer.data,
+                    "errors": serializer.errors,
+                    "status": status.HTTP_200_OK,
+                },
+                status=status.HTTP_200_OK,
+            )
 
-        return Response({'errors': serializer.errors, 'status': status.HTTP_400_BAD_REQUEST},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"errors": serializer.errors, "status": status.HTTP_400_BAD_REQUEST},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class EmployeeDeleteApiView(generic_rest_views.RetrieveDestroyAPIView):
@@ -106,7 +142,9 @@ class EmployeeDeleteApiView(generic_rest_views.RetrieveDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         super().destroy(self, request, *args, **kwargs)
-        return Response({'status': status.HTTP_204_NO_CONTENT}, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"status": status.HTTP_204_NO_CONTENT}, status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
@@ -115,14 +153,17 @@ class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            instance = Employee.objects.get(pk=kwargs['pk'])
+            instance = Employee.objects.get(pk=kwargs["pk"])
         except Employee.DoesNotExist:
-            return Response({'status': status.HTTP_404_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"status": status.HTTP_404_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = self.get_serializer(instance)
-        return Response({'data': serializer.data,
-                         'status': status.HTTP_200_OK},
-                        status=status.HTTP_200_OK, )
+        return Response(
+            {"data": serializer.data, "status": status.HTTP_200_OK},
+            status=status.HTTP_200_OK,
+        )
 
 
 # View showing that you can get user ID from Token
@@ -140,7 +181,7 @@ class GetUserByToken(APIView):
             #  next two rows are used with basic accounts
             # 'user': str(request.user),  # `django.contrib.accounts.User` instance.
             # 'accounts': str(request.accounts),  # None
-            'userNameByToken': str(Token.objects.get(key=token_string).user),
+            "userNameByToken": str(Token.objects.get(key=token_string).user),
             # 'accounts': str(request.accounts),  # None
         }
         return Response(content)
@@ -164,8 +205,10 @@ class RegisterView(generic_rest_views.CreateAPIView):
         except IntegrityError as ex:
             return Response({"message": f"{ex}"}, status=status.HTTP_409_CONFLICT)
 
-        return Response({"message": f"Successfully registered.<{user}>"},
-                        status=status.HTTP_201_CREATED)
+        return Response(
+            {"message": f"Successfully registered.<{user}>"},
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class LogOutUser(APIView):
@@ -180,10 +223,12 @@ class LogOutUser(APIView):
 
         # logout(request)
 
-        return Response({"success": f"Successfully logged out.<{user}>"},
-                        status=status.HTTP_200_OK)
+        return Response(
+            {"success": f"Successfully logged out.<{user}>"}, status=status.HTTP_200_OK
+        )
 
 
 """
 Some crazy comments
+Some crazy comments for second time
 """
