@@ -114,3 +114,12 @@ Control.ca-list
 Control.ca-bundle
 Control.system-ca-bundle
 GitHub.sublime-settings
+
+# Flake8 configuration
+.flake8
+
+# Black configuration
+pyproject.toml
+
+# pre-commit configuration file
+.pre-commit-config.yaml
