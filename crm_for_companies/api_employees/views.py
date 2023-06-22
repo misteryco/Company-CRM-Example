@@ -1,24 +1,19 @@
 # from django.contrib.auth import authenticate
 import time
 
+import cloudinary.uploader
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
-from rest_framework import (
-    generics as generic_rest_views,
-    views as rest_basic_views,
-    status,
-    permissions,
-)
-import cloudinary.uploader
-
+from rest_framework import generics as generic_rest_views
+from rest_framework import permissions, status
+from rest_framework import views as rest_basic_views
 # from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -27,12 +22,10 @@ from rest_framework.views import APIView
 from crm_for_companies.api_companies.models import Company
 from crm_for_companies.api_employees.models import Employee
 from crm_for_companies.api_employees.serializers import (
-    EmployeeSerializerWithCompany,
-    CreateEmployeeSerializer,
-    RegisterSerializer,
-)
-
-from crm_for_companies.api_employees.tasks import send_welcome_email_to_new_users
+    CreateEmployeeSerializer, EmployeeSerializerWithCompany,
+    RegisterSerializer)
+from crm_for_companies.api_employees.tasks import \
+    send_welcome_email_to_new_users
 
 
 class EmployeeListApiView(rest_basic_views.APIView):
@@ -231,4 +224,5 @@ class LogOutUser(APIView):
 """
 Some crazy comments
 Some crazy comments for second time
+Some Crazy again
 """

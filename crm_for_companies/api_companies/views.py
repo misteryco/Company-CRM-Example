@@ -1,13 +1,15 @@
 import cloudinary.uploader
 from django.shortcuts import get_object_or_404
-from rest_framework import views as rest_basic_views, status
+from rest_framework import status
+from rest_framework import views as rest_basic_views
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import (SAFE_METHODS, BasePermission,
+                                        IsAuthenticated)
 from rest_framework.response import Response
 
 from crm_for_companies.api_companies.models import Company, UserModel
-from crm_for_companies.api_companies.serializers import CompanySerializer, CompanyCreateSerializer, \
-    CompanySerializerWithEmployees
+from crm_for_companies.api_companies.serializers import (
+    CompanyCreateSerializer, CompanySerializer, CompanySerializerWithEmployees)
 
 
 class IsCompanyOwner(BasePermission):
