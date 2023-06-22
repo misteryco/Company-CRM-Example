@@ -231,6 +231,4 @@ class LogOutUser(APIView):
 """
 Some crazy comments
 Some crazy comments for second time
-
-
 """
