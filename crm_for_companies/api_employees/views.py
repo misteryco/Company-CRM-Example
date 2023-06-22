@@ -182,3 +182,8 @@ class LogOutUser(APIView):
 
         return Response({"success": f"Successfully logged out.<{user}>"},
                         status=status.HTTP_200_OK)
+
+
+"""
+Some crazy comments
+"""
