@@ -1,13 +1,19 @@
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
-from crm_for_companies.api_employees.views import GetUserByToken, RegisterView, LogOutUser
+from crm_for_companies.api_employees.views import (
+    CustomAuthToken,
+    GetUserByToken,
+    LogOutUser,
+    RegisterView,
+)
 
 urlpatterns = (
-    path('get-user-token/', GetUserByToken.as_view(), name='get user by token'),
-    path('obtain-auth-token/', obtain_auth_token, name='api_token_auth'),
-    path('register-user-by-id/', RegisterView.as_view(), name='register_user'),
-    path('log-out-user/', LogOutUser.as_view(), name='log_out_user'),
+    path("get-user-token/", GetUserByToken.as_view(), name="get user by token"),
+    # path('obtain-auth-token/', obtain_auth_token, name='api_token_auth'),
+    path("obtain-auth-token/", CustomAuthToken.as_view(), name="api_token_auth"),
+    path("register-user-by-id/", RegisterView.as_view(), name="register_user"),
+    path("log-out-user/", LogOutUser.as_view(), name="log_out_user"),
 )
 
 # from django.urls import path

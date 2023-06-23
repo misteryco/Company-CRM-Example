@@ -7,13 +7,16 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics as generic_rest_views
 from rest_framework import permissions, status
 from rest_framework import views as rest_basic_views
 
 # from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.views import ObtainAuthToken, obtain_auth_token
+from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -37,6 +40,11 @@ class EmployeeListApiView(rest_basic_views.APIView):
     # to check authentication
     permission_classes = (IsAuthenticated,)
 
+    @swagger_auto_schema(
+        operation_summary="Retrieve all Employees from DB.",
+        operation_description="This endpoint shows all Employees.",
+        responses={200: serializer_class},
+    )
     def get(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
 
@@ -59,6 +67,28 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
 
+    # Other method to define swagger schema
+    # @swagger_auto_schema(
+    #     request_body=openapi.Schema(
+    #         type=openapi.TYPE_OBJECT,
+    #         properties={
+    #             'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+    #             'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+    #             'date_of_birth': openapi.Schema(type=openapi.TYPE_STRING),
+    #             'photo': openapi.Schema(type=openapi.TYPE_STRING),
+    #             'position': openapi.Schema(type=openapi.TYPE_STRING),
+    #             'salary': openapi.Schema(type=openapi.TYPE_INTEGER),
+    #             'company': openapi.Schema(type=openapi.TYPE_INTEGER),
+    #         },
+    #         required=['first_name', 'last_name', 'date_of_birth', 'photo', 'position', 'salary', 'company'],
+    #     )
+    # )
+    @swagger_auto_schema(
+        operation_summary="Record new Employee in DB.",
+        operation_description="This endpoint create a new Employee for specific company.",
+        request_body=serializer_class,
+        responses={201: serializer_class},
+    )
     def post(self, request, *args, **kwargs):
         try:
             Company.objects.get(pk=request.data["company"])
@@ -95,10 +125,17 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
         )
 
 
-class EmployeeUpdateApiView(generic_rest_views.RetrieveUpdateAPIView):
+# class EmployeeUpdateApiView(generic_rest_views.RetrieveUpdateAPIView):
+class EmployeeUpdateApiView(generic_rest_views.UpdateAPIView):
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
 
+    @swagger_auto_schema(
+        operation_summary="Edit existing Employee from DB.",
+        operation_description="This endpoint edit a existing Employee identified by PK.",
+        request_body=serializer_class,
+        responses={200: serializer_class},
+    )
     def put(self, request, *args, **kwargs):
         try:
             Company.objects.get(pk=request.data["company"])
@@ -132,10 +169,16 @@ class EmployeeUpdateApiView(generic_rest_views.RetrieveUpdateAPIView):
         )
 
 
-class EmployeeDeleteApiView(generic_rest_views.RetrieveDestroyAPIView):
+# class EmployeeDeleteApiView(generic_rest_views.RetrieveDestroyAPIView):
+class EmployeeDeleteApiView(generic_rest_views.DestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
 
+    @swagger_auto_schema(
+        operation_summary="Delete existing Employee from DB.",
+        operation_description="This endpoint delete existing Employee identified by PK.",
+        responses={204: serializer_class},
+    )
     def destroy(self, request, *args, **kwargs):
         super().destroy(self, request, *args, **kwargs)
         return Response(
@@ -147,6 +190,11 @@ class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializerWithCompany
 
+    @swagger_auto_schema(
+        operation_summary="Retrieve Employee from DB.",
+        operation_description="This endpoint shows Employee identified by PK.",
+        responses={200: serializer_class},
+    )
     def get(self, request, *args, **kwargs):
         try:
             instance = Employee.objects.get(pk=kwargs["pk"])
@@ -169,7 +217,11 @@ class GetUserByToken(APIView):
     permission_classes = [IsAuthenticated]
 
     # authentication_classes = [TokenAuthentication]
-
+    @swagger_auto_schema(
+        operation_summary="Retrieve current user's 'username' from DB.",
+        operation_description="This endpoint shows current user's 'username' identified by Auth Token.",
+        responses={200: "{'userNameByToken': 'Token Content' }"},
+    )
     def get(self, request, format=None):
         # show it to Alex with debugger
         token_string = request.auth.pk
@@ -180,7 +232,10 @@ class GetUserByToken(APIView):
             "userNameByToken": str(Token.objects.get(key=token_string).user),
             # 'accounts': str(request.accounts),  # None
         }
-        return Response(content)
+        return Response(
+            content,
+            status=status.HTTP_200_OK,
+        )
 
 
 # Views connected to register and logout :
@@ -189,6 +244,11 @@ class RegisterView(generic_rest_views.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+    @swagger_auto_schema(
+        operation_summary="Retrieve current user's 'username' from DB.",
+        operation_description="This endpoint shows current user's 'username' identified by Auth Token.",
+        request_body=serializer_class,
+    )
     def post(self, request):
         user = User(**request.data)
         user.set_password(user.password)
@@ -208,6 +268,11 @@ class RegisterView(generic_rest_views.CreateAPIView):
 
 
 class LogOutUser(APIView):
+    @swagger_auto_schema(
+        operation_summary="Logging out current user.",
+        operation_description="This Logout current user, identified by Auth Token.",
+        responses={200: '{"success": f"Successfully logged out.<{user}>"}'},
+    )
     def post(self, request):
         # show it to Alex with debugger
         token_string = request.auth.pk
@@ -221,6 +286,32 @@ class LogOutUser(APIView):
 
         return Response(
             {"success": f"Successfully logged out.<{user}>"}, status=status.HTTP_200_OK
+        )
+
+
+class CustomAuthToken(ObtainAuthToken):
+    """
+    This endpoint authenticates the user and returns an authentication token.
+    """
+
+    # To do this as is good look at CHAT GPT !!!!!
+    @swagger_auto_schema(
+        operation_summary="Retrieve token from here ;).",
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        token, created = Token.objects.get_or_create(user=user)
+        return Response(
+            {
+                "token": token.key,
+                # 'user_id': user.pk,
+                # 'email': user.email
+            },
+            status=status.HTTP_200_OK,
         )
 
 
