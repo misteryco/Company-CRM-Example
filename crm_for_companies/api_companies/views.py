@@ -16,6 +16,15 @@ from crm_for_companies.api_companies.serializers import (
 )
 
 
+def get_first_user_pk():
+    user = UserModel.objects.all().first()
+
+    if user is not None:
+        return user.pk
+    else:
+        return None
+
+
 class IsCompanyOwner(BasePermission):
     message = "Only Owner can see company details."
 
@@ -49,7 +58,37 @@ class IsCompanyOwner(BasePermission):
         return request.user in UserModel.objects.filter(company__owner=request.user)
 
 
+company_request_body_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        "owner": openapi.Schema(
+            type=openapi.TYPE_ARRAY,
+            items=openapi.Items(type=openapi.TYPE_INTEGER),
+        ),
+        "name": openapi.Schema(type=openapi.TYPE_STRING),
+        "description": openapi.Schema(type=openapi.TYPE_STRING),
+        "logo": openapi.Schema(type=openapi.TYPE_STRING),
+    },
+    required=["owner", "name", "description", "logo"],
+    example={
+        "name": "Example Company",
+        "description": "Some example company description",
+        "logo": "/home/yd/Screenshot-10.png",
+        "owner": [
+            get_first_user_pk(),
+        ],
+    },
+)
+
+
 class CompanyListApiView(rest_basic_views.APIView):
+    """
+    Get list of all companies data.
+
+    This returns list of all companies from DB. Needs  authentication token. No other parameters.
+
+    """
+
     queryset = Company.objects.all()
     serializer_class = CompanySerializerWithEmployees
     permission_classes = (IsAuthenticated,)
@@ -71,6 +110,13 @@ class CompanyListApiView(rest_basic_views.APIView):
 
 
 class CreateCompanyApiView(rest_basic_views.APIView):
+    """
+    Create new company.
+
+    Save new company in the database.
+
+    """
+
     queryset = Company.objects.all()
 
     # @swagger_auto_schema(
@@ -86,7 +132,8 @@ class CreateCompanyApiView(rest_basic_views.APIView):
     #     )
     # )
     @swagger_auto_schema(
-        request_body=CompanyCreateSerializer, responses={200: CompanyCreateSerializer}
+        request_body=company_request_body_schema,
+        responses={200: CompanyCreateSerializer},
     )
     def post(self, request, *args, **kwargs):
         serializer = CompanyCreateSerializer(
@@ -119,27 +166,23 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
     permission_classes = (IsCompanyOwner,)
 
     def get(self, request, pk):
+        """
+        Get company specific data
+
+        Retrieve company data when PK is specified in URL
+        """
         instance = self.serializer_class(get_object_or_404(Company, pk=pk))
         self.check_object_permissions(self.request, instance)
 
         return Response(instance.data)
 
-    @swagger_auto_schema(
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "owner": openapi.Schema(
-                    type=openapi.TYPE_ARRAY,
-                    items=openapi.Items(type=openapi.TYPE_INTEGER),
-                ),
-                "name": openapi.Schema(type=openapi.TYPE_STRING),
-                "description": openapi.Schema(type=openapi.TYPE_STRING),
-                "logo": openapi.Schema(type=openapi.TYPE_STRING),
-            },
-            required=["owner", "name", "description", "logo"],
-        )
-    )
+    @swagger_auto_schema(request_body=company_request_body_schema)
     def put(self, request, pk):
+        """
+        Edit (overwrite) company data.
+
+        Edit data for company identified by PK
+        """
         instance = get_object_or_404(Company, pk=pk)
 
         serializer = self.serializer_class(instance, data=request.data)
@@ -160,6 +203,11 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
         )
 
     def delete(self, request, pk):
+        """
+        Delete company from DB.
+
+        Deletes data for company identified by PK.
+        """
         try:
             instance = Company.objects.get(pk=pk)
         except Company.DoesNotExist:
