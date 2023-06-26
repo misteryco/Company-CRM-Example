@@ -168,17 +168,24 @@ class EmployeeUpdateApiView(generic_rest_views.UpdateAPIView):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+    @swagger_auto_schema(operation_summary="Partial update of an employee")
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
 
 # class EmployeeDeleteApiView(generic_rest_views.RetrieveDestroyAPIView):
+
+
 class EmployeeDeleteApiView(generic_rest_views.DestroyAPIView):
+    """
+    Delete Employee here
+
+    This endpoint delete employee, Employee is identified by PK.
+    """
+
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
 
-    @swagger_auto_schema(
-        operation_summary="Delete existing Employee from DB.",
-        operation_description="This endpoint delete existing Employee identified by PK.",
-        responses={204: serializer_class},
-    )
     def destroy(self, request, *args, **kwargs):
         super().destroy(self, request, *args, **kwargs)
         return Response(
@@ -245,8 +252,8 @@ class RegisterView(generic_rest_views.CreateAPIView):
     serializer_class = RegisterSerializer
 
     @swagger_auto_schema(
-        operation_summary="Retrieve current user's 'username' from DB.",
-        operation_description="This endpoint shows current user's 'username' identified by Auth Token.",
+        operation_summary="Register user here.",
+        operation_description="This endpoint register user after necessary data is provided.",
         request_body=serializer_class,
     )
     def post(self, request):
@@ -296,7 +303,30 @@ class CustomAuthToken(ObtainAuthToken):
 
     # To do this as is good look at CHAT GPT !!!!!
     @swagger_auto_schema(
-        operation_summary="Retrieve token from here ;).",
+        operation_summary="Authenticate and Retrieve token from here ;).",
+        responses={
+            200: openapi.Response(
+                description="Successful authentication",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "token": openapi.Schema(type=openapi.TYPE_STRING),
+                    },
+                ),
+            ),
+            400: openapi.Response(
+                description="Unsuccessful authentication",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "non_field_errors": openapi.Schema(
+                            type=openapi.TYPE_ARRAY,
+                            items=openapi.Schema(type=openapi.TYPE_STRING),
+                        )
+                    },
+                ),
+            ),
+        },
     )
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(
