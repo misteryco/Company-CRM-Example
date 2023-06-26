@@ -41,7 +41,7 @@ class IsCompanyOwner(BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        # print("in_has_object_permission")
+        print("in_has_object_permission")
         # Allow access for superusers
         if request.user.is_superuser:
             return True
@@ -50,12 +50,19 @@ class IsCompanyOwner(BasePermission):
         # return request.user in UserModel.objects.filter(company__owner=request.user)
         # print(obj.data['id'])
         # a = Company.objects.filter(pk=obj.data['id']).get()
+        print(obj["id"].value)
         # b = UserModel.objects.filter(company__owner=request.user).all()
-        # print(list(b))  # filter dict
+        b = UserModel.objects.filter(
+            company__owner=request.user, company__pk=obj["id"].value
+        )
+        print(list(b))  # filter dict
         # owners = [owner for owner in b]
-        # for o in b:
-        #     print(o)
-        return request.user in UserModel.objects.filter(company__owner=request.user)
+        for o in b:
+            print(o)
+        # return request.user in UserModel.objects.filter(company__owner=request.user)
+        return request.user in UserModel.objects.filter(
+            company__owner=request.user, company__pk=obj["id"].value
+        )
 
 
 company_request_body_schema = openapi.Schema(
