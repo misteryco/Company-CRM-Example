@@ -34,6 +34,47 @@ from crm_for_companies.api_employees.serializers import (
 from crm_for_companies.api_employees.tasks import send_welcome_email_to_new_users
 
 
+def get_first_company_pk():
+    first_company = Company.objects.all().first()
+
+    if first_company is not None:
+        return first_company.pk
+    else:
+        return None
+
+
+company_request_body = request_body = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        "first_name": openapi.Schema(type=openapi.TYPE_STRING),
+        "last_name": openapi.Schema(type=openapi.TYPE_STRING),
+        "date_of_birth": openapi.Schema(type=openapi.TYPE_STRING),
+        "photo": openapi.Schema(type=openapi.TYPE_STRING),
+        "position": openapi.Schema(type=openapi.TYPE_STRING),
+        "salary": openapi.Schema(type=openapi.TYPE_INTEGER),
+        "company": openapi.Schema(type=openapi.TYPE_INTEGER),
+    },
+    required=[
+        "first_name",
+        "last_name",
+        "date_of_birth",
+        "photo",
+        "position",
+        "salary",
+        "company",
+    ],
+    example={
+        "first_name": "FirstName",
+        "last_name": "Last",
+        "date_of_birth": "2006-07-04",
+        "photo": "/home/yd/Pictures/py/3789820.png",
+        "position": "NewEmployee",
+        "salary": 100,
+        "company": get_first_company_pk(),
+    },
+)
+
+
 class EmployeeListApiView(rest_basic_views.APIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializerWithCompany
@@ -68,28 +109,16 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
     serializer_class = CreateEmployeeSerializer
 
     # Other method to define swagger schema
-    # @swagger_auto_schema(
-    #     request_body=openapi.Schema(
-    #         type=openapi.TYPE_OBJECT,
-    #         properties={
-    #             'first_name': openapi.Schema(type=openapi.TYPE_STRING),
-    #             'last_name': openapi.Schema(type=openapi.TYPE_STRING),
-    #             'date_of_birth': openapi.Schema(type=openapi.TYPE_STRING),
-    #             'photo': openapi.Schema(type=openapi.TYPE_STRING),
-    #             'position': openapi.Schema(type=openapi.TYPE_STRING),
-    #             'salary': openapi.Schema(type=openapi.TYPE_INTEGER),
-    #             'company': openapi.Schema(type=openapi.TYPE_INTEGER),
-    #         },
-    #         required=['first_name', 'last_name', 'date_of_birth', 'photo', 'position', 'salary', 'company'],
-    #     )
-    # )
     @swagger_auto_schema(
-        operation_summary="Record new Employee in DB.",
-        operation_description="This endpoint create a new Employee for specific company.",
-        request_body=serializer_class,
+        request_body=company_request_body,
         responses={201: serializer_class},
     )
     def post(self, request, *args, **kwargs):
+        """
+        Record new Employee in DB.
+
+        This endpoint create a new Employee for specific company.
+        """
         try:
             Company.objects.get(pk=request.data["company"])
         except Company.DoesNotExist:
@@ -131,12 +160,15 @@ class EmployeeUpdateApiView(generic_rest_views.UpdateAPIView):
     serializer_class = CreateEmployeeSerializer
 
     @swagger_auto_schema(
-        operation_summary="Edit existing Employee from DB.",
-        operation_description="This endpoint edit a existing Employee identified by PK.",
         request_body=serializer_class,
         responses={200: serializer_class},
     )
     def put(self, request, *args, **kwargs):
+        """
+        Edit (overwrite) existing Employee data.
+
+        This endpoint edit existing Employee identified by PK.
+        """
         try:
             Company.objects.get(pk=request.data["company"])
         except Company.DoesNotExist:
@@ -198,11 +230,14 @@ class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
     serializer_class = EmployeeSerializerWithCompany
 
     @swagger_auto_schema(
-        operation_summary="Retrieve Employee from DB.",
-        operation_description="This endpoint shows Employee identified by PK.",
         responses={200: serializer_class},
     )
     def get(self, request, *args, **kwargs):
+        """
+        Retrieve Employee from DB.
+
+        This endpoint shows Employee identified by PK.
+        """
         try:
             instance = Employee.objects.get(pk=kwargs["pk"])
         except Employee.DoesNotExist:
@@ -225,11 +260,14 @@ class GetUserByToken(APIView):
 
     # authentication_classes = [TokenAuthentication]
     @swagger_auto_schema(
-        operation_summary="Retrieve current user's 'username' from DB.",
-        operation_description="This endpoint shows current user's 'username' identified by Auth Token.",
         responses={200: "{'userNameByToken': 'Token Content' }"},
     )
     def get(self, request, format=None):
+        """
+        Retrieve current user's 'username' from DB.
+
+        This endpoint shows current user's 'username' identified by Auth Token.
+        """
         # show it to Alex with debugger
         token_string = request.auth.pk
         content = {
@@ -276,11 +314,14 @@ class RegisterView(generic_rest_views.CreateAPIView):
 
 class LogOutUser(APIView):
     @swagger_auto_schema(
-        operation_summary="Logging out current user.",
-        operation_description="This Logout current user, identified by Auth Token.",
         responses={200: '{"success": f"Successfully logged out.<{user}>"}'},
     )
     def post(self, request):
+        """
+        Logging out current user
+
+        This Logout current user, identified by Auth Token
+        """
         # show it to Alex with debugger
         token_string = request.auth.pk
         user = str(Token.objects.get(key=token_string).user)
@@ -298,12 +339,13 @@ class LogOutUser(APIView):
 
 class CustomAuthToken(ObtainAuthToken):
     """
+    Authenticate and Retrieve token from here ;).
+
     This endpoint authenticates the user and returns an authentication token.
     """
 
     # To do this as is good look at CHAT GPT !!!!!
     @swagger_auto_schema(
-        operation_summary="Authenticate and Retrieve token from here ;).",
         responses={
             200: openapi.Response(
                 description="Successful authentication",
