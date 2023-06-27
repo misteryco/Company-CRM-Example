@@ -59,7 +59,6 @@ class IsCompanyOwner(BasePermission):
         # owners = [owner for owner in b]
         for o in b:
             print(o)
-        # return request.user in UserModel.objects.filter(company__owner=request.user)
         return request.user in UserModel.objects.filter(
             company__owner=request.user, company__pk=obj["id"].value
         )
@@ -221,7 +220,6 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
             return Response(
                 {"status": status.HTTP_404_NOT_FOUND}, status=status.HTTP_404_NOT_FOUND
             )
-        # instance = self.queryset.filter(pk=pk).get()
         instance.delete()
         return Response(
             {"status": status.HTTP_204_NO_CONTENT}, status=status.HTTP_204_NO_CONTENT
