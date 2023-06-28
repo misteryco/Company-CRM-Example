@@ -1,8 +1,4 @@
-# from django.contrib.auth import authenticate
-import time
-
 import cloudinary.uploader
-from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
@@ -10,17 +6,11 @@ from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics as generic_rest_views
-from rest_framework import permissions, status
+from rest_framework import status
 from rest_framework import views as rest_basic_views
-
-# from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken, obtain_auth_token
-from rest_framework.decorators import api_view
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
-# from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-# from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -32,47 +22,7 @@ from crm_for_companies.api_employees.serializers import (
     RegisterSerializer,
 )
 from crm_for_companies.api_employees.tasks import send_welcome_email_to_new_users
-
-
-def get_first_company_pk():
-    first_company = Company.objects.all().first()
-
-    if first_company is not None:
-        return first_company.pk
-    else:
-        return None
-
-
-company_request_body = request_body = openapi.Schema(
-    type=openapi.TYPE_OBJECT,
-    properties={
-        "first_name": openapi.Schema(type=openapi.TYPE_STRING),
-        "last_name": openapi.Schema(type=openapi.TYPE_STRING),
-        "date_of_birth": openapi.Schema(type=openapi.TYPE_STRING),
-        "photo": openapi.Schema(type=openapi.TYPE_STRING),
-        "position": openapi.Schema(type=openapi.TYPE_STRING),
-        "salary": openapi.Schema(type=openapi.TYPE_INTEGER),
-        "company": openapi.Schema(type=openapi.TYPE_INTEGER),
-    },
-    required=[
-        "first_name",
-        "last_name",
-        "date_of_birth",
-        "photo",
-        "position",
-        "salary",
-        "company",
-    ],
-    example={
-        "first_name": "FirstName",
-        "last_name": "Last",
-        "date_of_birth": "2006-07-04",
-        "photo": "/home/yd/Pictures/py/3789820.png",
-        "position": "NewEmployee",
-        "salary": 100,
-        "company": get_first_company_pk(),
-    },
-)
+from crm_for_companies.core.employees_functions import employee_request_body
 
 
 class EmployeeListApiView(rest_basic_views.APIView):
@@ -110,7 +60,7 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
 
     # Other method to define swagger schema
     @swagger_auto_schema(
-        request_body=company_request_body,
+        request_body=employee_request_body,
         responses={201: serializer_class},
     )
     def post(self, request, *args, **kwargs):
@@ -154,7 +104,6 @@ class EmployeeCreateApiView(rest_basic_views.APIView):
         )
 
 
-# class EmployeeUpdateApiView(generic_rest_views.RetrieveUpdateAPIView):
 class EmployeeUpdateApiView(generic_rest_views.UpdateAPIView):
     queryset = Employee.objects.all()
     serializer_class = CreateEmployeeSerializer
@@ -205,9 +154,6 @@ class EmployeeUpdateApiView(generic_rest_views.UpdateAPIView):
         return super().patch(request, *args, **kwargs)
 
 
-# class EmployeeDeleteApiView(generic_rest_views.RetrieveDestroyAPIView):
-
-
 class EmployeeDeleteApiView(generic_rest_views.DestroyAPIView):
     """
     Delete Employee here
@@ -252,13 +198,9 @@ class EmployeeDetailsApiView(generic_rest_views.RetrieveAPIView):
         )
 
 
-# View showing that you can get user ID from Token
 class GetUserByToken(APIView):
-    # following rows are used when we have not configured settings file with : DEFAULT_AUTHENTICATION_CLASSES
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    # authentication_classes = [TokenAuthentication]
     @swagger_auto_schema(
         responses={200: "{'userNameByToken': 'Token Content' }"},
     )
@@ -268,7 +210,6 @@ class GetUserByToken(APIView):
 
         This endpoint shows current user's 'username' identified by Auth Token.
         """
-        # show it to Alex with debugger
         token_string = request.auth.pk
         content = {
             #  next two rows are used with basic accounts
@@ -283,7 +224,6 @@ class GetUserByToken(APIView):
         )
 
 
-# Views connected to register and logout :
 class RegisterView(generic_rest_views.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
@@ -344,7 +284,6 @@ class CustomAuthToken(ObtainAuthToken):
     This endpoint authenticates the user and returns an authentication token.
     """
 
-    # To do this as is good look at CHAT GPT !!!!!
     @swagger_auto_schema(
         responses={
             200: openapi.Response(

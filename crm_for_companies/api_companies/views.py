@@ -4,8 +4,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework import views as rest_basic_views
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
 from crm_for_companies.api_companies.models import Company, UserModel
@@ -23,31 +22,6 @@ def get_first_user_pk():
         return user.pk
     else:
         return None
-
-
-class IsCompanyOwner(BasePermission):
-    message = "Only Owner can see company details."
-
-    def has_permission(self, request, view):
-        # Check if the user is authenticated
-        if not request.user.is_authenticated:
-            return False
-        # Allow access for superusers
-        if request.user.is_superuser:
-            return True
-        if request.method:
-            return True
-
-        return False
-
-    def has_object_permission(self, request, view, obj):
-        print("in_has_object_permission")
-        # Allow access for superusers
-        if request.user.is_superuser:
-            return True
-        return request.user in UserModel.objects.filter(
-            company__owner=request.user, company__pk=obj["id"].value
-        )
 
 
 company_request_body_schema = openapi.Schema(
@@ -72,12 +46,46 @@ company_request_body_schema = openapi.Schema(
     },
 )
 
+details_company_api_views_manual_parameters = [
+    openapi.Parameter(
+        "id",
+        openapi.IN_PATH,
+        description="id of the company to edit",
+        type=openapi.TYPE_INTEGER,
+        example=123,
+    )
+]
+
+
+class IsCompanyOwner(BasePermission):
+    message = "Only Owner can see company details."
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_superuser:
+            return True
+        if request.method:
+            return True
+
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        # print("in_has_object_permission")
+        if request.user.is_superuser:
+            return True
+        return request.user in UserModel.objects.filter(
+            company__owner=request.user, company__pk=obj["id"].value
+        )
+
 
 class CompanyListApiView(rest_basic_views.APIView):
     """
     Get list of all companies data.
 
-    This returns list of all companies from DB. Needs  authentication token. No other parameters.
+    This returns list of all companies from DB.
+    Needs  authentication token.
+    No other parameters.
 
     """
 
@@ -111,18 +119,6 @@ class CreateCompanyApiView(rest_basic_views.APIView):
 
     queryset = Company.objects.all()
 
-    # @swagger_auto_schema(
-    #     request_body=openapi.Schema(
-    #         type=openapi.TYPE_OBJECT,
-    #         properties={
-    #             'owner': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_INTEGER)),
-    #             'name': openapi.Schema(type=openapi.TYPE_STRING),
-    #             'description': openapi.Schema(type=openapi.TYPE_STRING),
-    #             'logo': openapi.Schema(type=openapi.TYPE_STRING),
-    #         },
-    #         required=['owner', 'name', 'description', 'logo'],
-    #     )
-    # )
     @swagger_auto_schema(
         request_body=company_request_body_schema,
         responses={200: CompanyCreateSerializer},
@@ -157,6 +153,9 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
 
     permission_classes = (IsCompanyOwner,)
 
+    @swagger_auto_schema(
+        manual_parameters=details_company_api_views_manual_parameters,
+    )
     def get(self, request, pk):
         """
         Get company specific data
@@ -168,7 +167,10 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
 
         return Response(instance.data)
 
-    @swagger_auto_schema(request_body=company_request_body_schema)
+    @swagger_auto_schema(
+        request_body=company_request_body_schema,
+        manual_parameters=details_company_api_views_manual_parameters,
+    )
     def put(self, request, pk):
         """
         Edit (overwrite) company data.
@@ -194,6 +196,9 @@ class DetailsCompanyApiView(rest_basic_views.APIView):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+    @swagger_auto_schema(
+        manual_parameters=details_company_api_views_manual_parameters,
+    )
     def delete(self, request, pk):
         """
         Delete company from DB.

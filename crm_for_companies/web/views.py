@@ -1,20 +1,13 @@
-from django.contrib.auth import views as auth_views, mixins as auth_mixins, get_user_model, login
-from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import redirect, render
+from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.views import generic as views
-
-from django.views.decorators.csrf import csrf_protect
-
-from crm_for_companies.web.forms import EditUserForm
 
 UserModel = get_user_model()
 
 
 class HomePage(views.ListView):
     model = UserModel
-    template_name = 'index.html'
+    template_name = "index.html"
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -22,31 +15,33 @@ class HomePage(views.ListView):
 
 
 class UserDetailsView(views.DetailView):
-    template_name = 'profile-details.html'
+    template_name = "profile-details.html"
     model = UserModel
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        object_pk = context.get('object').pk
-        context['user_ID'] = object_pk
+        object_pk = context.get("object").pk
+        context["user_ID"] = object_pk
         return context
 
 
 class EditUserView(views.UpdateView):
-    template_name = 'edit-user-no-csrft.html'
+    template_name = "edit-user-no-csrft.html"
     model = UserModel
-    fields = ('username', 'email',)
+    fields = (
+        "username",
+        "email",
+    )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_title'] = 'Edit Profile'
-        context['form__button_title'] = 'Save Changes'
+        context["form_title"] = "Edit Profile"
+        context["form__button_title"] = "Save Changes"
         return context
 
     def get_success_url(self):
-        return reverse_lazy(
-            'Details',
-            kwargs={'pk': self.object.pk})
+        return reverse_lazy("Details", kwargs={"pk": self.object.pk})
+
 
 # disabled after re-enabling CSRF middleware in settings file
 # @csrf_protect
@@ -64,7 +59,6 @@ class EditUserView(views.UpdateView):
 #         'object': this_user,
 #     }
 #     return render(request, template_name='edit-user.html', context=context)
-
 # disabled after re-enabling CSRF middleware in settings file
 # def edit_user_cookie_protection_view(request, pk):
 #     this_user = UserModel.objects.filter(pk=pk).get()
