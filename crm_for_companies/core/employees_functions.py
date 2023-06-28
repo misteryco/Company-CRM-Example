@@ -1,6 +1,18 @@
+from datetime import date, timedelta
+
+from django.core.exceptions import ValidationError
 from drf_yasg import openapi
 
 from crm_for_companies.api_companies.models import Company
+
+
+def validate_age(value):
+    min_age_employee = 16
+    delta_age = date.today().year - value.year
+    if delta_age <= min_age_employee:
+        raise ValidationError(
+            f"Employee should be at least {min_age_employee} years old"
+        )
 
 
 def get_first_company_pk():
