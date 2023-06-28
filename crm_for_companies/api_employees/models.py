@@ -1,19 +1,9 @@
-from datetime import date, timedelta
-
+from cloudinary import models as cloudinary_models
 from django.core.validators import MinLengthValidator
 from django.db import models
-from django.core.exceptions import ValidationError
-
-from cloudinary import models as cloudinary_models
 
 from crm_for_companies.api_companies.models import Company
-
-
-def validate_age(value):
-    min_age_employee = 16
-    delta_age = date.today().year - value.year
-    if delta_age <= min_age_employee:
-        raise ValidationError(f'Employee should be at least {min_age_employee} years old')
+from crm_for_companies.core.employees_functions import validate_age
 
 
 class Employee(models.Model):
@@ -26,42 +16,34 @@ class Employee(models.Model):
 
     first_name = models.CharField(
         max_length=NAME_MAX_LEN,
-        validators=(
-            MinLengthValidator(NAME_MIN_LEN),
-        ),
+        validators=(MinLengthValidator(NAME_MIN_LEN),),
         null=False,
         blank=False,
     )
 
     last_name = models.CharField(
         max_length=NAME_MAX_LEN,
-        validators=(
-            MinLengthValidator(NAME_MIN_LEN),
-        ),
+        validators=(MinLengthValidator(NAME_MIN_LEN),),
         null=False,
         blank=False,
     )
 
     date_of_birth = models.DateField(
-        validators=(
-            validate_age,
-        ),
+        validators=(validate_age,),
     )
 
     photo = cloudinary_models.CloudinaryField(
-        'image',
+        "image",
         null=False,
         blank=True,
-
     )
 
     position = models.CharField(
         max_length=POSITION_MAX_LEN,
-        validators=(MinLengthValidator(POSITION_MIN_LEN),
-                    ),
+        validators=(MinLengthValidator(POSITION_MIN_LEN),),
         null=False,
         blank=False,
-        verbose_name='Position in the company',
+        verbose_name="Position in the company",
     )
 
     salary = models.IntegerField(
@@ -75,4 +57,4 @@ class Employee(models.Model):
     )
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}, works at: {self.company}.'
+        return f"{self.first_name} {self.last_name}, works at: {self.company}."
