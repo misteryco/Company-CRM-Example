@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date
 
 from django.core.exceptions import ValidationError
 from drf_yasg import openapi
