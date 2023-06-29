@@ -330,8 +330,4 @@ class CustomAuthToken(ObtainAuthToken):
 Some crazy comments
 Some crazy comments for second time
 Some Crazy again
-Some 4
-Some 5
-Some 6
-Some 7
 """
