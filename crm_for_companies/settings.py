@@ -103,7 +103,10 @@ DATABASES = {
         "NAME": "crm_tables",
         "USER": env("DB_USERNAME"),
         "PASSWORD": env("DB_PASSWORD"),
-        "HOST": "127.0.0.1",
+        # Following line works for dockerfile
+        "HOST": "postgres",
+        # Following line work for local development
+        # "HOST": "localhost",
         "PORT": "5432",
     }
 }
@@ -197,8 +200,12 @@ REST_FRAMEWORK = {
 # AUTH_USER_MODEL = 'User'
 
 # CELERY settings
-CELERY_BROKER_URL = "pyamqp://guest@localhost//"
-CELERY_RESULT_BACKEND = "db+postgresql://postgres:postgres@localhost/crm_tables"
+# Following two lines work for Docker
+CELERY_BROKER_URL = "pyamqp://guest@rabbitmq//"
+CELERY_RESULT_BACKEND = "db+postgresql://postgres:postgres@postgres/crm_tables"
+# Following two lines work for local dev
+# CELERY_BROKER_URL = "pyamqp://guest@localhost//"
+# CELERY_RESULT_BACKEND = "db+postgresql://postgres:postgres@localhost/crm_tables"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
