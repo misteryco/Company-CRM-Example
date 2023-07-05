@@ -6,7 +6,7 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="CRM for Companies API",
+        title="CRM for Companies API from DOCKER",
         default_version="v.0.0.1",
         description="Test description",
         terms_of_service="https://www.google.com/policies/terms/",
