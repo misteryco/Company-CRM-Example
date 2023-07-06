@@ -1,10 +1,24 @@
 services:
   crm-app:
     build: .
+    restart: always
     ports:
       - 8001:8000
+      #    volumes:
+      #      - .:/app
     volumes:
-      - .:/app
+#      - type: volume
+#        source: the_app
+#        target: /data
+#        volume:
+#          nocopy: true
+      - type: bind
+        source: .
+        target: /app
+    environment:
+      CELERY_BROKER_URL_: pyamqp://guest@rabbitmq//
+      CELERY_RESULT_BACKEND_: db+postgresql://postgres:postgres@postgres/crm_tables
+      DB_HOST: postgres
   postgres:
     image: postgres
     restart: always
@@ -26,3 +40,40 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+#volumes:
+#  # Just specify a path and let the Engine create a volume
+#  - /var/lib/mysql
+#
+#  # Specify an absolute path mapping
+#  - /opt/data:/var/lib/mysql
+#
+#  # Path on the host, relative to the Compose file
+#  - ./cache:/tmp/cache
+#
+#  # User-relative path
+#  - ~/configs:/etc/configs/:ro
+#
+#  # Named volume
+#  - datavolume:/var/lib/mysql
+#version: "3.2"
+#services:
+#  web:
+#    image: nginx:alpine
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - type: volume
+#        source: mydata
+#        target: /data
+#        volume:
+#          nocopy: true
+#      - type: bind
+#        source: ./static
+#        target: /opt/app/static
+#
+#networks:
+#  webnet:
+#
+#volumes:
+#  mydata:

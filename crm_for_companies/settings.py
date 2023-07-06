@@ -90,12 +90,6 @@ WSGI_APPLICATION = "crm_for_companies.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     "default": {
@@ -104,7 +98,8 @@ DATABASES = {
         "USER": env("DB_USERNAME"),
         "PASSWORD": env("DB_PASSWORD"),
         # Following line works for dockerfile
-        "HOST": "postgres",
+        # "HOST": "postgres",
+        "HOST": env("DB_HOST"),
         # Following line work for local development
         # "HOST": "localhost",
         "PORT": "5432",
@@ -201,8 +196,10 @@ REST_FRAMEWORK = {
 
 # CELERY settings
 # Following two lines work for Docker
-CELERY_BROKER_URL = "pyamqp://guest@rabbitmq//"
-CELERY_RESULT_BACKEND = "db+postgresql://postgres:postgres@postgres/crm_tables"
+# CELERY_BROKER_URL = "pyamqp://guest@rabbitmq//"
+# CELERY_RESULT_BACKEND = "db+postgresql://postgres:postgres@postgres/crm_tables"
+CELERY_BROKER_URL = env("CELERY_BROKER_URL_")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND_")
 # Following two lines work for local dev
 # CELERY_BROKER_URL = "pyamqp://guest@localhost//"
 # CELERY_RESULT_BACKEND = "db+postgresql://postgres:postgres@localhost/crm_tables"
