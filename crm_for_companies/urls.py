@@ -4,8 +4,10 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-# def trigger_error(request):
-#     division_by_zero = 1 / 0
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+    print(division_by_zero)
 
 
 schema_view = get_schema_view(
@@ -42,5 +44,5 @@ urlpatterns = [
     ),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     # sentry test error
-    # path("sentry-debug/", trigger_error),
+    path("sentry-debug/", trigger_error),
 ]
