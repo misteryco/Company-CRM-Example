@@ -14,17 +14,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . code
 WORKDIR /code
 
+# Try to drop it
 VOLUME /home/yd/PycharmProjects/Company-CRM-Example
-
+# Try to drop it
 EXPOSE 8000
 
-# runs the production server
-#ENTRYPOINT ["python", "mysite/manage.py"]
-#ENTRYPOINT ["python", "manage.py"]
-#CMD ["runserver", "0.0.0.0:8000"]
-#CMD bash -c "python manage.py runserver 0.0.0.0:8000 &&  \
-#    celery -A crm_for_companies worker -l info -E && \
-#    celery -A crm_for_companies beat -l info"
 COPY entrypoint.sh entrypoint.sh
 
 # Following command also should be executed on host machine

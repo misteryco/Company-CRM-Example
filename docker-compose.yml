@@ -6,12 +6,14 @@ services:
       - 8001:8000
     volumes:
       - .:/code
-
     environment:
       DEBUG: False
       CELERY_BROKER_URL_: pyamqp://guest@rabbitmq//
       CELERY_RESULT_BACKEND_: db+postgresql://postgres:postgres@postgres/crm_tables
       DB_HOST: postgres
+    depends_on:
+      - postgres
+      - rabbitmq
   postgres:
     image: postgres
     restart: always
