@@ -25,4 +25,4 @@ COPY entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["/code/entrypoint.sh"]
-#RUN /code/entrypoint.sh
+#RUN /code/entrypoint.sh or other
