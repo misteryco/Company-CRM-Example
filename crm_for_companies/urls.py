@@ -12,7 +12,7 @@ def trigger_error(request):
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="CRM for Companies API from DOCKER 7",
+        title="CRM for Companies API from DOCKER 7.2",
         default_version="v.0.0.1",
         description="Test description",
         terms_of_service="https://www.google.com/policies/terms/",
