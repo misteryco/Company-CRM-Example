@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content_page %}
+
+
+    <h1>User Profile Details</h1>
+    <div class="info-section">
+        <div class="car-header">
+            {% if object.get_full_name %}
+                <!-- user full name (if any) -->
+                {{ object.get_full_name }}
+            {% endif %}
+            <!-- user username -->
+            <p class="description">Username: {{ object.username }}</p>
+            <!-- user email -->
+            <p class="description">Email: {{ object.email }}</p>
+            <!-- user ID -->
+            <p class="description">ID: {{ object.pk }}</p>
+        </div>
+    </div>
+    <a href="{% url 'Edit' pk=user.pk %}" class="details-btn">Edit User {{ user.pk }} Details</a>
+    <p></p>
+
+
+{% endblock %}

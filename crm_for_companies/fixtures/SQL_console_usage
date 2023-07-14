@@ -1,0 +1,117 @@
+-- CREATE DATABASE my_test;
+
+-- CREATE TABLE bands
+-- (
+--     id         BIGSERIAL PRIMARY KEY,
+--     name       VARCHAR(255) NOT NULL,
+--     created_at TIMESTAMP DEFAULT NOW()
+-- );
+
+-- insert into bands (name)
+-- VALUES ('Some Band')
+
+-- SELECT * FROM bands;
+
+-- INSERT INTO bands (name)
+-- VALUES
+--     ('Some Band 2'),
+--     ('Some Band 3'),
+--     ('Some Band 4'),
+--     ('Some Band 5');
+
+-- SELECT * FROM albums;
+
+-- SELECT name FROM albums;
+
+-- SELECT name FROM bands limit 2;
+
+-- CREATE TABLE albums
+-- (
+--     id         BIGSERIAL PRIMARY KEY,
+--     name       VARCHAR(255) NOT NULL,
+--     created_at TIMESTAMP DEFAULT NOW(),
+--     band_id    INT          NOT NULL,
+--     FOREIGN KEY (band_id) references bands (id)
+-- );
+
+-- INSERT INTO albums (name, band_id)
+-- VALUES
+--     ('Some Album 1', 1),
+--     ('Some Album 2', 2),
+--     ('Some Album 3', 3),
+--     ('Some Album 4', 3)
+-- ;
+
+-- SELECT * FROM albums;
+
+-- SELECT DISTINCT band_id FROM albums
+
+-- UPDATE albums
+-- SET band_id = 1
+-- WHERE name LIKE '%3%';
+
+-- SELECT * FROM albums;
+
+-- UPDATE albums
+-- SET band_id = 2
+-- WHERE band_id = 3;
+
+-- SELECT * FROM albums;
+
+-- DELETE
+-- FROM bands
+-- WHERE name = 'Some Band 5'
+
+-- SELECT * FROM bands
+-- JOIN albums ON bands.id = albums.band_id;
+
+-- SELECT COUNT(id) FROM bands;
+
+-- SELECT COUNT(id) FROM bands;
+
+-- CREATE TABLE comments
+-- (
+--     content   VARCHAR(255) NOT NULL,
+--     album_id INT          NOT NULL,
+--     band_id INT          NOT NULL
+-- );
+
+-- INSERT INTO comments (content, album_id, band_id)
+-- VALUES
+--     ('Some Comment 1', 1, 1),
+--     ('Some Comment 2', 2,1);
+
+-- SELECT content, name
+-- FROM comments
+-- JOIN albums ON comments.album_id = albums.id;
+
+-- ALTER TABLE comments
+-- ADD id BIGSERIAL PRIMARY KEY;
+
+-- SELECT comments.id, albums.id
+-- FROM comments
+-- JOIN albums ON comments.album_id = albums.id;
+
+-- SELECT b.name as band_name, COUNT(band_id) AS albums_number
+-- FROM bands as b
+-- JOIN albums as a ON b.id = a.band_id
+-- group by b.id
+
+-- SELECT b.name as band_name, COUNT(a.id) AS albums_number
+-- FROM bands as b
+-- JOIN albums as a ON b.id = a.band_id
+-- group by b.id
+-- HAVING COUNT(a.id) >= 1;
+
+-- SELECT b.name as band_name, SUM(a.id) AS albums_number
+-- FROM bands as b
+-- JOIN albums as a ON b.id = a.band_id
+-- group by b.id
+-- HAVING COUNT(a.id) >= 1;
+
+-- SELECT b.name as band_name, COUNT(a.id) AS albums_number
+-- FROM bands as b
+-- JOIN albums as a ON b.id = a.band_id
+-- WHERE b.name = 'Some Band'
+-- group by b.id
+-- HAVING COUNT(a.id) >= 1;

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content_page %}
+    <h1>User Profile Details</h1>
+    <div>
+        <div>
+            Full name :
+            {% if object.get_full_name %}
+                <!-- user full name (if any) -->
+                {{ object.get_full_name }}
+            {% endif %}
+            <!-- user username -->
+            <p class="description">Username: {{ object.username }}</p>
+            <!-- user email -->
+            <p class="description">Email: {{ object.email }}</p>
+            <!-- user ID -->
+            <p class="description">ID: {{ object.id }}</p>
+        </div>
+    </div>
+
+
+    <form id="create" method="post" enctype="multipart/form-data">
+
+        <h1>{{ form_title }}</h1>
+        <div style="display: flex; flex-direction: column">
+            {{ form }}
+            {% csrf_token %}
+            <input class="btn submit" type="submit" value="Edit User">
+
+        </div>
+    </form>
+{% endblock %}

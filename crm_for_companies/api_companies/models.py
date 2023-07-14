@@ -1,11 +1,14 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
 
 from cloudinary import models as cloudinary_models
 
+UserModel = get_user_model()
+
 
 class Company(models.Model):
-    NAME_MAX_LEN = 30
+    NAME_MAX_LEN = 300
     NAME_MIN_LEN = 3
     DESCRIPTION_MIN_LENGTH = 10
     DESCRIPTION_MAX_LENGTH = 300
@@ -32,6 +35,11 @@ class Company(models.Model):
     logo = cloudinary_models.CloudinaryField(
         'image',
         null=False,
+        blank=True,
+    )
+
+    owner = models.ManyToManyField(
+        UserModel,
         blank=True,
     )
 

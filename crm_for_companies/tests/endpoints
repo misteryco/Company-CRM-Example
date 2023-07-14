@@ -1,0 +1,17 @@
+http://127.0.0.1:8000/web/get-user-token/
+http://127.0.0.1:8000/web/obtain-auth-token/
+http://127.0.0.1:8000/web/register-user-by-id/
+http://127.0.0.1:8000/web/log-out-user/
+
+
+http://127.0.0.1:8000/api_companies/
+http://127.0.0.1:8000/api_companies/create/
+http://127.0.0.1:8000/api_companies/details/<int:pk>/
+
+
+http://127.0.0.1:8000/api_employees/
+http://127.0.0.1:8000/api_employees/create/
+http://127.0.0.1:8000/api_employees/details/<int:pk>
+http://127.0.0.1:8000/api_employees/update/<int:pk>
+http://127.0.0.1:8000/api_employees/delete/<int:pk>
+http://127.0.0.1:8000/api_employees/delete/<int:pk>

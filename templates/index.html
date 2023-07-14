@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content_page %}
+
+    <h1>Users List:</h1>
+
+    {% for user in user_list %}
+        <div class="car-card">
+            <li>
+
+                {% if object.get_full_name %}
+                    <!-- user full name (if any) -->
+                    <h1>{{ user.get_full_name }}</h1>
+                {% endif %}
+                <!-- user data -->
+                Username: {{ user.username }} | Email: {{ user.email }} | PK: {{ user.pk }} --> <a
+                    href="{% url 'Details' pk=user.pk %}" class="details-btn">User {{ user.pk }} Details</a>
+                <p></p>
+
+            </li>
+        </div>
+    {% endfor %}
+
+{% endblock %}

@@ -91,7 +91,8 @@ coverage.xml
 celerybeat-schedule.*
 
 # Environments
-.env
+crm_for_companies/.env
+.env_docker
 .venv
 env/
 venv/
@@ -114,3 +115,14 @@ Control.ca-list
 Control.ca-bundle
 Control.system-ca-bundle
 GitHub.sublime-settings
+
+# Flake8 configuration
+.flake8
+
+# Black configuration
+pyproject.toml
+
+# pre-commit configuration file
+.pre-commit-config.yaml
+#postgres db
+/postgresql

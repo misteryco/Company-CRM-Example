@@ -13,13 +13,20 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="Django default" uuid="36a4c33f-9327-45cb-9c6f-907185eab5ad">
+    <data-source source="LOCAL" name="Django default" uuid="17c84499-1e32-4bfd-b350-9833c0558b26">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/crm_for_companies/settings.py</remarks>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\jorda\PycharmProjects\crm_for_companies\db.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/db.sqlite3</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="postgres@localhost" uuid="7e0cc467-e2fb-486d-8e1c-e0aea717f55b">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
