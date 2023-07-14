@@ -91,7 +91,8 @@ coverage.xml
 celerybeat-schedule.*
 
 # Environments
-.env
+crm_for_companies/.env
+.env_docker
 .venv
 env/
 venv/

@@ -7,9 +7,9 @@ services:
     volumes:
       - .:/code
     environment:
-      DEBUG: False
-      CELERY_BROKER_URL_: pyamqp://guest@rabbitmq//
-      CELERY_RESULT_BACKEND_: db+postgresql://postgres:postgres@postgres/crm_tables
+      #  Env variables bellow are from .env file for Docker(in the current dir), more app specific settings
+      #  are defined in .env file, located in "./crm_for_companies" directory
+      CELERY_RESULT_BACKEND_: ${CELERY_RESULT_BACKEND_:?}
       DB_HOST: postgres
     depends_on:
       postgres:
@@ -22,9 +22,11 @@ services:
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
+      #  Env variables bellow are from .env file for Docker(in the current dir), more app specific settings
+      #  are defined in .env file, located in "./crm_for_companies" directory
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?}
+      POSTGRES_USER: ${DB_USERNAME:?}
+      POSTGRES_DB: ${DB_HOST:?}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./postgresql:/var/lib/postgresql/data
