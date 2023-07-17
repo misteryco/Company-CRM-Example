@@ -13,8 +13,8 @@ services:
       CELERY_RESULT_BACKEND_: ${CELERY_RESULT_BACKEND_:?}
       DB_HOST: postgres
     depends_on:
-      postgres:
-        condition: service_healthy
+#      postgres:
+#        condition: service_healthy
       rabbitmq:
         condition: service_healthy
   postgres:
