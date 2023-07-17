@@ -12,18 +12,16 @@ services:
       DEBUG: off
       CELERY_RESULT_BACKEND_: ${CELERY_RESULT_BACKEND_:?}
       DB_HOST: postgres
-    depends_on:
+#    depends_on:
 #      postgres:
 #        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
   postgres:
-    build:
-      context: .
-      dockerfile: Dockerfile.db
+    image: postgres
     restart: always
     ports:
-      - "5433:5432"
+      - "5434:5432"
     environment:
       #  Env variables bellow are from .env file for Docker(in the current dir), more app specific settings
       #  are defined in .env file, located in "./crm_for_companies" directory
@@ -32,12 +30,12 @@ services:
       POSTGRES_DB: ${DB_HOST:?}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ./postgresql_dev:/var/lib/postgresql/data
+      - ./postgresql:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'" ]
       interval: 10s
-      timeout: 30s
-      retries: 3
+      timeout: 3s
+      retries: 10
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'

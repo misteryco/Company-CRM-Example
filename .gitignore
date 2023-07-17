@@ -125,4 +125,4 @@ pyproject.toml
 # pre-commit configuration file
 .pre-commit-config.yaml
 #postgres db
-/postgresql
+/tmp/postgresql

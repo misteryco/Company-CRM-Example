@@ -16,7 +16,10 @@ def validate_age(value):
 
 
 def get_first_company_pk():
-    first_company = Company.objects.all().first()
+    try:
+        first_company = Company.objects.all().first()
+    except Company.DoesNotExist:
+        first_company = None
 
     if first_company is not None:
         return first_company.pk
