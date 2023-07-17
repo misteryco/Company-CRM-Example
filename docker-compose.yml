@@ -9,6 +9,7 @@ services:
     environment:
       #  Env variables bellow are from .env file for Docker(in the current dir), more app specific settings
       #  are defined in .env file, located in "./crm_for_companies" directory
+      DEBUG: off
       CELERY_RESULT_BACKEND_: ${CELERY_RESULT_BACKEND_:?}
       DB_HOST: postgres
     depends_on:
@@ -17,7 +18,9 @@ services:
       rabbitmq:
         condition: service_healthy
   postgres:
-    image: postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.db
     restart: always
     ports:
       - "5433:5432"
@@ -29,7 +32,7 @@ services:
       POSTGRES_DB: ${DB_HOST:?}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
+      - ./postgresql_new3:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'" ]
       interval: 10s
