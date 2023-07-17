@@ -14,15 +14,17 @@ WORKDIR /code
 
 EXPOSE 8000
 
+COPY entrypoint.sh entrypoint.sh
+#RUN chmod +x entrypoint.sh
 # runs the production server
 #ENTRYPOINT ["python", "mysite/manage.py"]
 #ENTRYPOINT ["python", "manage.py"]
-#CMD ["runserver", "0.0.0.0:8000"]
+#CMD ["python3", "runserver", "0.0.0.0:8000"]
 #CMD bash -c "python manage.py runserver 0.0.0.0:8000 &&  \
 #    celery -A crm_for_companies worker -l info -E && \
 #    celery -A crm_for_companies beat -l info"
-COPY entrypoint.sh entrypoint.sh
-RUN chmod +x entrypoint.sh
+#COPY entrypoint.sh entrypoint.sh
+#RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["/code/entrypoint.sh"]
 #RUN /code/entrypoint.sh
