@@ -1,6 +1,6 @@
 FROM postgres
 
 COPY tmp/again/init-user-db.sh /docker-entrypoint-initdb.d/init-user-db.sh
-COPY tmp/plain_dump.sql tmp/plain_dump.sql
+COPY tmp/plain_dump_new.sql tmp/plain_dump_new.sql
 
 RUN chmod +x /docker-entrypoint-initdb.d/init-user-db.sh
