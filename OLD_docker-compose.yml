@@ -12,16 +12,16 @@ services:
       DEBUG: off
       CELERY_RESULT_BACKEND_: ${CELERY_RESULT_BACKEND_:?}
       DB_HOST: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
   postgres:
     image: postgres
     restart: always
     ports:
-      - "5433:5432"
+      - "5434:5432"
     environment:
       #  Env variables bellow are from .env file for Docker(in the current dir), more app specific settings
       #  are defined in .env file, located in "./crm_for_companies" directory
