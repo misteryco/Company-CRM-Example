@@ -13,8 +13,8 @@ services:
       CELERY_RESULT_BACKEND_: ${CELERY_RESULT_BACKEND_:?}
       DB_HOST: postgres
     depends_on:
-#      postgres:
-#        condition: service_healthy
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
   postgres:
@@ -39,7 +39,9 @@ services:
       timeout: 30s
       retries: 3
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+#    image: rabbitmq:3-management-alpine
+    image: rabbitmq
+    restart: always
     container_name: 'rabbitmq'
     ports:
       - 5672:5672
